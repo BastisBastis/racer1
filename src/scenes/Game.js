@@ -39,9 +39,9 @@ export default class Game extends Phaser.Scene {
     
     
     let currDir = 0;
-    const roadWidth = 50;
-    const startX = 100;
-    const startY = 150;
+    const roadWidth = 100;
+    const startX = 50;
+    const startY = 120;
     let roadParts = [startX,startY,startX,startY+roadWidth] //50 = width of road
     
     const angleToRad = (angle) => {
@@ -89,21 +89,21 @@ export default class Game extends Phaser.Scene {
         ]
       }
     }
-    addStraight(400);
+    addStraight(200);
     addTurn("l", 5, 10, 9);
-    addStraight(50);
+    addStraight(5);
     addTurn("r", 5, 20, 9);
-    addStraight(100);
+    addStraight(55);
     addTurn("r",10,5,9);
     addStraight(200);
     addTurn("r",5,5,9);
-    addStraight(400);
+    addStraight(200);
     addTurn("r",5,10,9);
-    addStraight(99);
+    addStraight(50);
     addTurn("r",5,10,9);
     addStraight(39)
 
-    var poly = this.add.polygon(400, 300, roadParts, 0x888888);
+    this.road = this.add.polygon(400, 300, roadParts, 0x888888);
 
   }
   
