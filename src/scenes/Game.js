@@ -1,6 +1,7 @@
 import Phaser from "phaser"
-
-import logoImg from '../assets/logo.png';
+import carImg from '../assets/car1.png';
+import Car from "../objects/Car"
+import Controller from "../helpers/Controller"
 
 export default class Game extends Phaser.Scene {
   constructor () {
@@ -8,14 +9,30 @@ export default class Game extends Phaser.Scene {
   }
 
   preload () {
-      this.load.image('logo', logoImg);
+      this.load.image('car', carImg);
   }
     
   create () {
-    this.cameras.main.setBackgroundColor("#aaff00")
+    
+    //World stuff
+    this.matter.world.disableGravity();
+
+    
+    //Camera Settings
+    this.cameras.main.setBackgroundColor("#337733")
     
     this.createMap();  
-    console.log("huop")
+    
+    
+    this.player = new Car(this, 0, 200,250)
+    
+    this.controller= new Controller(this, this.player)
+    
+    /*
+    this.add.sprite(300,250,"car").setTint(0x00ff00).setScale(0.125).setRotation(90*Math.PI/180);
+    this.add.sprite(200,275,"car").setTint(0x0000ff).setScale(0.125).setRotation(90*Math.PI/180);
+    this.add.sprite(300,275,"car").setTint(0xffff00).setScale(0.125).setRotation(90*Math.PI/180);
+    */
   }
 
   createMap() {
@@ -23,7 +40,7 @@ export default class Game extends Phaser.Scene {
     
     let currDir = 0;
     const roadWidth = 50;
-    const startX = 0;
+    const startX = 100;
     const startY = 150;
     let roadParts = [startX,startY,startX,startY+roadWidth] //50 = width of road
     
@@ -72,7 +89,7 @@ export default class Game extends Phaser.Scene {
         ]
       }
     }
-    addStraight(200);
+    addStraight(400);
     addTurn("l", 5, 10, 9);
     addStraight(50);
     addTurn("r", 5, 20, 9);
@@ -80,14 +97,19 @@ export default class Game extends Phaser.Scene {
     addTurn("r",10,5,9);
     addStraight(200);
     addTurn("r",5,5,9);
-    addStraight(200);
+    addStraight(400);
     addTurn("r",5,10,9);
     addStraight(99);
     addTurn("r",5,10,9);
     addStraight(39)
 
-    var poly = this.add.polygon(400, 300, roadParts, 0x0000ff);
+    var poly = this.add.polygon(400, 300, roadParts, 0x888888);
 
+  }
+  
+  update(time,delta) {
+    this.controller.update(delta)
+    
   }
 }
 
