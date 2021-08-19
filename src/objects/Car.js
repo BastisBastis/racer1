@@ -14,6 +14,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     this.maxSpeed=5;
     this.accSpeed =0.0015
     
+    this.airFric=0.05;
     this.setFrictionAir(0.05);
     //this.setMass(10);
     
@@ -39,12 +40,10 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
   
   accelerate(amount) {
     let realMaxSpeed = this.maxSpeed;
-    console.log(this.scene.road.contains) 
-    /*
-    if (!Phaser.Geom.Polygon.ContainsPoint(this.scene.road, this.position)) {
-      realMaxSpeed *=0.5;
-    }
-    */
+    //console.log(Phaser.Geom.Polygon.Contains(this.scene.road.geom,this.x,this.y)) 
+    
+    
+    
     if (this.getSpeed() <= realMaxSpeed) {
       this.thrust(this.accSpeed*amount);
       //console.log(this.getSpeed())
@@ -54,6 +53,12 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
   }
   
   update(delta) {
+    if (!Phaser.Geom.Polygon.Contains(this.scene.road.geom,this.x,this.y)) {
+      this.setFrictionAir(this.airFric*2)
+    }
+    else {
+      this.setFrictionAir(this.airFric)
+    }
     
   }
   

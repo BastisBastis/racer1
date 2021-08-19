@@ -18,7 +18,7 @@ export default class Controller {
     /* Camera dimensions */
     const cam = {w:scene.cameras.main.width, h:scene.cameras.main.height};
       
-    const maxJoystick = 40;
+    const maxJoystick = 100;
     //Register new touches
     scene.input.on("pointerdown", pointer => {
       if (!this.steeringTouch && pointer.x>cam.w/2) {
