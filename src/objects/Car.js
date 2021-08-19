@@ -22,13 +22,16 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     scene.add.existing(this);
     
     
-    
-    
   }
   
   turn(dir) {
     //Change turning method
-    const turnSpeed=0.02 * this.getSpeed();
+    //const turnSpeed=0.02 * this.getSpeed();
+    
+    const turnSpeed=0.04 * Math.pow(this.getSpeed(),0.3);
+    
+    console.log("speed: "+this.getSpeed()+ " ts: " + turnSpeed);
+    
     this.setAngularVelocity(dir*turnSpeed);
     
   }
@@ -39,17 +42,9 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
   }
   
   accelerate(amount) {
-    let realMaxSpeed = this.maxSpeed;
-    //console.log(Phaser.Geom.Polygon.Contains(this.scene.road.geom,this.x,this.y)) 
-    
-    
-    
-    if (this.getSpeed() <= realMaxSpeed) {
+    if (this.getSpeed() <= this.maxSpeed) {
       this.thrust(this.accSpeed*amount);
-      //console.log(this.getSpeed())
     }
-    
-    
   }
   
   update(delta) {
