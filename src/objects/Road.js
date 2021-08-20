@@ -34,7 +34,6 @@ class RoadPoints {
   }
   
   addTurn(turnDir,stepDist, steps, stepAngle) {
-    
     for (let i = 0; i < steps; i++) {
       let newX1, newX2, newY1, newY2;
       if (turnDir === "l") {
@@ -88,7 +87,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
   
   static roadFromData(scene,x,y,width,dir,data,roadColor,bg) {
     const roadPoints = new RoadPoints(x, y, width, dir);
-    
+
     for (let entry of data) {
       if (entry.type===0) {
         roadPoints.addStraight(entry.dist);
@@ -102,8 +101,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
           
       }
     }
-    console.log(roadPoints.outer)
-    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadColor, bg);
+    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, 0x888888, 0x337733)
   }
   
   static defaultRoad(scene) {
@@ -111,8 +109,6 @@ export default class Road extends Phaser.GameObjects.Polygon {
     const roadWidth = 100;
     const startX = 150;
     const startY = 200;
-    
-    //const roadPoints = new RoadPoints(startX, startY, roadWidth, currDir);
     
     const roadData = [
       {
@@ -123,7 +119,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
         type:1,
         dir:"l",
         stepDist:5,
-        step:10,
+        steps:10,
         stepAngle:9
       },
       {
@@ -134,7 +130,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
         type:1,
         dir:"r",
         stepDist:5,
-        step:20,
+        steps:20,
         stepAngle:9
       },
       {
@@ -145,7 +141,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
         type:1,
         dir:"r",
         stepDist:10,
-        step:5,
+        steps:5,
         stepAngle:9
       },
       {
@@ -156,7 +152,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
         type:1,
         dir:"r",
         stepDist:5,
-        step:5,
+        steps:5,
         stepAngle:9
       },
       {
@@ -167,7 +163,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
         type:1,
         dir:"r",
         stepDist:5,
-        step:10,
+        steps:10,
         stepAngle:9
       },
       {
@@ -178,7 +174,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
         type:1,
         dir:"r",
         stepDist:5,
-        step:10,
+        steps:10,
         stepAngle:9
       },
       {
@@ -187,26 +183,8 @@ export default class Road extends Phaser.GameObjects.Polygon {
       }
     ]
     
-    return Road.roadFromData(scene,startX,startY,roadWidth,currDir,roadData,0x888888, 0x337733);
-    
-    /*
-    roadPoints.addStraight(200);
-    roadPoints.addTurn("l", 5, 10, 9);
-    roadPoints.addStraight(5);
-    roadPoints.addTurn("r", 5, 20, 9);
-    roadPoints.addStraight(55);
-    roadPoints.addTurn("r",10,5,9);
-    roadPoints.addStraight(200);
-    roadPoints.addTurn("r",5,5,9);
-    roadPoints.addStraight(200);
-    roadPoints.addTurn("r",5,10,9);
-    roadPoints.addStraight(50);
-    roadPoints.addTurn("r",5,10,9);
-    roadPoints.addStraight(39);
-
-    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, 0x888888, 0x337733);
-  */
-    
+    const r = Road.roadFromData(scene,startX,startY,roadWidth,currDir,roadData,0x888888, 0x337733);
+    return r;
   }
   
 }

@@ -76,6 +76,18 @@ export default class Controller {
       } 
     });
     
+    const keyCodes = {
+      a:Phaser.Input.Keyboard.KeyCodes.A,
+      s:Phaser.Input.Keyboard.KeyCodes.S,
+      d:Phaser.Input.Keyboard.KeyCodes.D,
+      w:Phaser.Input.Keyboard.KeyCodes.W
+    }
+    this.keys = {}
+    for (const [key,keyCode] of Object.entries(keyCodes)) {
+      this.keys[key] = scene.input.keyboard.addKey(keyCode);
+    }
+    
+
   }
   
   update(delta) {
@@ -90,33 +102,20 @@ export default class Controller {
         this.player.turn(this.steeringTouch.turn);
       }
       
+    } else {
+      if (this.keys.w.isDown) {
+        this.player.accelerate(dRatio);
+      } else if (this.keys.s.isDown) {
+        this.player.accelerate(-dRatio);
+      }
+      if (this.keys.a.isDown) {
+        this.player.turn(-0.8);
+      }
+      else if (this.keys.d.isDown) {
+        this.player.turn(0.8);
+      }
     }
     
-    //console.log(this.scene.input.activePointer.x)
-    /*
-    if (this.scene.input.activePointer.isDown) {
-      /*
-      if (Phaser.Geom.Rect.ContainsPoint(this.movementRect.getBounds(), this.scene.active.pointer.position)) {
-        console.log("hupp");
-      }
-      */
-      /*
-      const cam = {w:this.scene.cameras.main.width, h:this.scene.cameras.main.height};
-      
-      if (this.scene.input.activePointer.x > cam.w/2+10) {
-        this.player.turn(1);
-      }
-      else if (this.scene.input.activePointer.x < cam.w/2-100) {
-        this.player.turn(-1);
-      }
-      if (this.scene.input.activePointer.y > cam.h/2+50) {
-        this.player.accelerate(-1 * dRatio);
-      }
-      else if (this.scene.input.activePointer.y < cam.h/2-50) {
-        this.player.accelerate(1 * dRatio);
-      }
-    }
-    */
     
   }
 }

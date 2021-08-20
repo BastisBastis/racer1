@@ -43,6 +43,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
   }
   
   accelerate(amount) {
+    
     if (this.getSpeed() <= this.maxSpeed) {
       this.thrust(this.accSpeed*amount);
     }
@@ -51,7 +52,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
   update(delta) {
     
     if (!this.scene.road.contains(this.x,this.y)) {
-      //console.log(7272)
+      
       this.setFrictionAir(this.airFric*2)
     }
     else {
