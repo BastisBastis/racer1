@@ -1,4 +1,5 @@
 import Phaser from "phaser"
+//import Road from "./Road"
 
 
 export default class Car extends Phaser.Physics.Matter.Sprite {
@@ -30,7 +31,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     
     const turnSpeed=0.04 * Math.pow(this.getSpeed(),0.3);
     
-    console.log("speed: "+this.getSpeed()+ " ts: " + turnSpeed);
+    //console.log("speed: "+this.getSpeed()+ " ts: " + turnSpeed);
     
     this.setAngularVelocity(dir*turnSpeed);
     
@@ -48,12 +49,15 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
   }
   
   update(delta) {
-    if (!Phaser.Geom.Polygon.Contains(this.scene.road.geom,this.x,this.y)) {
+    
+    if (!this.scene.road.contains(this.x,this.y)) {
+      //console.log(7272)
       this.setFrictionAir(this.airFric*2)
     }
     else {
       this.setFrictionAir(this.airFric)
     }
+    
     
   }
   

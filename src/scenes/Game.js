@@ -1,7 +1,9 @@
 import Phaser from "phaser"
 import carImg from '../assets/car1.png';
 import Car from "../objects/Car"
+import Road from "../objects/Road"
 import Controller from "../helpers/Controller"
+
 
 export default class Game extends Phaser.Scene {
   constructor () {
@@ -21,12 +23,15 @@ export default class Game extends Phaser.Scene {
     //Camera Settings
     this.cameras.main.setBackgroundColor("#337733")
     
-    this.createMap();  
+    this.createMap2();  
     
     
     this.player = new Car(this, 0, 200,250)
     
     this.controller= new Controller(this, this.player)
+    
+    this.cameras.main.startFollow(this.player);
+    this.cameras.main.setZoom(1)
     
     /*
     this.add.sprite(300,250,"car").setTint(0x00ff00).setScale(0.125).setRotation(90*Math.PI/180);
@@ -37,7 +42,7 @@ export default class Game extends Phaser.Scene {
 
 
 
-  createMap() {
+  createMap1() {
     
     
     let currDir = 0;
@@ -108,9 +113,9 @@ export default class Game extends Phaser.Scene {
     this.road = this.add.polygon(0,0, roadParts, 0x888888).setOrigin(0,0);
 
   }
-  /*
   
-  createMap() {
+  
+  createMap2() {
     
     
     let currDir = 0;
@@ -189,11 +194,11 @@ export default class Game extends Phaser.Scene {
     addTurn("r",5,10,9);
     addStraight(39)
 
-    this.road = this.add.polygon(0,0, roadParts, 0x888888).setOrigin(0,0);
-    //this.island = this.add.polygon(this.road.x-roadWidth, this.road.y-roadWidth, innerRoad, 0x337733).setOrigin(0,0);
-
+    //this.road = new Road(this,0,0, roadParts,innerRoad, 0x888888, 0x337733);
+    this.road =Road.defaultRoad(this);
+    
   }
-  */
+  
   
   update(time,delta) {
     this.controller.update(delta)

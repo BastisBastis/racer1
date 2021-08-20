@@ -1,6 +1,7 @@
 import Phaser from "phaser"
 import Car from "../objects/Car"
 
+
 export default class Controller {
   constructor(scene,player) {
     this.scene = scene;
@@ -51,14 +52,26 @@ export default class Controller {
     scene.input.on("pointermove", pointer => {
       if (this.steeringTouch && this.steeringTouch.id === pointer.id) {
         
-        const deltaX = Math.min(Math.max(this.steeringTouch.startX-pointer.x, -maxJoystick),maxJoystick);
-        const deltaY = Math.min(Math.max(this.steeringTouch.startY-pointer.y, -maxJoystick),maxJoystick);
+        let deltaX = Math.min(Math.max(this.steeringTouch.startX-pointer.x, -maxJoystick),maxJoystick);
+        let deltaY = Math.min(Math.max(this.steeringTouch.startY-pointer.y, -maxJoystick),maxJoystick);
+        if (deltaX > -10 && deltaX < 10) {
+          deltaX = 0;
+        }
+        else {
+          deltaX = deltaX>0 ? deltaX-10 : deltaX+10;
+        }
+        if (deltaY > -10 && deltaY < 10) {
+          deltaY = 0;
+        }
+        else {
+          deltaY = deltaY>0 ? deltaY-10 : deltaY+10;
+        }
         
         steeringPoint.x = steeringOrigin.x-deltaX;
         steeringPoint.y = steeringOrigin.y-deltaY;
         
-        this.steeringTouch.accelerate=deltaY/maxJoystick;
-        this.steeringTouch.turn=-deltaX/maxJoystick;
+        this.steeringTouch.accelerate=deltaY/(maxJoystick-10);
+        this.steeringTouch.turn=-deltaX/(maxJoystick-10);
         
       } 
     });
