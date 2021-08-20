@@ -1,5 +1,18 @@
 import Phaser from "phaser"
 
+const angleToRad = (angle) => {
+  return angle * Math.PI / 180; 
+}
+
+class roadPoints {
+  constructor(x, y, width) {
+    this.outer = [x, y];
+    this.inner = [x, y+width];
+  }
+  
+  
+}
+
 export default class Road extends Phaser.GameObjects.Polygon {
   
   constructor (scene,x,y,outerPoints,innerPoints,fill,bg,cars,obstacles) {
@@ -20,6 +33,8 @@ export default class Road extends Phaser.GameObjects.Polygon {
     return Phaser.Geom.Polygon.Contains(this.geom,x,y) && !Phaser.Geom.Polygon.Contains(this.island.geom,x,y)
   }
   
+  
+  
   static defaultRoad(scene) {
     let currDir = 0;
     const roadWidth = 100;
@@ -31,9 +46,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
     
     let innerRoad = [startX,startY+roadWidth]
     
-    const angleToRad = (angle) => {
-      return angle * Math.PI / 180; 
-    }
+    
     
     const addStraight = (dist) => {
       const newX1 = roadParts[0] + dist * Math.cos(angleToRad(currDir));
