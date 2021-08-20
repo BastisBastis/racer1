@@ -30,7 +30,7 @@ export default class Game extends Phaser.Scene {
     
     this.controller= new Controller(this, this.player)
     
-    this.cameras.main.startFollow(this.player);
+    //this.cameras.main.startFollow(this.player);
     this.cameras.main.setZoom(1)
     
     /*
