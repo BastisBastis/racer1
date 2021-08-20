@@ -11,6 +11,9 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     
     this.setTint(0xff0000);
     this.setScale(0.125);
+    this.setOrigin(0.25,0.5);
+    this.body.position.x-=this.width*0.0625/2
+    this.body.positionPrev.x-=this.width*0.0625/2
     
     this.maxSpeed=5;
     this.accSpeed =0.0015
