@@ -16,7 +16,7 @@ export default class Map {
     
   }
   
-  static mapFromData(scene,roadData,wallData,bounds, checkpoints,bg) {
+  static mapFromData(scene,roadData,wallData,bounds, checkpoints, finishLine,bg) {
     
     
     const road = Road.roadFromData(
@@ -68,6 +68,9 @@ export default class Map {
      checkpointShapes.push(shape);
      
    }
+
+   scene.add.polygon(finishLine.x, finishLine.y, finishLine.points, 0xffffff);
+
     
     return new Map(scene,road,checkpointShapes,bg);
   }
@@ -183,26 +186,28 @@ export default class Map {
       centerY:360,
       angle:180
     }, {
-      centerX:360,
+      centerX:330,
       centerY:360,
       angle:0
     }
     ];
+    const finishLine = {
+      x:330,
+      y:250,
+      points:[
+        0,0,
+        0,100,
+        10,100,
+        10,0
+      ]
+    };
     
-    return Map.mapFromData(scene,roadData,walls,bounds,checkpoints,0x337733)
+    return Map.mapFromData(scene,roadData,walls,bounds,checkpoints, finishLine,0x337733)
   }
   
   addCar(car) {
     this.cars.push(car);
     car.setMapDetails(this.checkpoints.length, this.lapCount);
-  }
-  
-  startRace(time) {
-    this.startTime=now();
-    for (const car of this.cars) {
-        car.start(this.startTime);
-        this.scene.startRace(this.startTime);
-      }
   }
   
   update(time, delta) {

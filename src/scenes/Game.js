@@ -1,10 +1,9 @@
 import Phaser from "phaser"
 import carImg from '../assets/car1.png';
 import Car from "../objects/Car"
-import Road from "../objects/Road"
 import Controller from "../helpers/Controller"
 import Map from "../objects/Map"
-
+import Player from "../objects/Player";
 
 export default class Game extends Phaser.Scene {
   constructor () {
@@ -17,6 +16,8 @@ export default class Game extends Phaser.Scene {
     
   create () {
     
+    
+
     //World stuff
     this.matter.world.disableGravity();
 
@@ -29,7 +30,7 @@ export default class Game extends Phaser.Scene {
     this.road = this.map.road;
     //this.road =Road.defaultRoad(this);
     
-    this.player = new Car(this, 0xff0000, 200,250);
+    this.player = new Player(this, 0xff0000, 200,250);
     const removeLater = new Car(this,0x00ff00, 150, 250)
     
     this.map.addCar(this.player);
@@ -42,34 +43,28 @@ export default class Game extends Phaser.Scene {
     
     this.totalTimeLabel=this.add.text(50,50,"0:00:00", {fontSize:50}).setScrollFactor(0);
     this.lapTimeLabel=this.add.text(50,100,"0:00:00", {fontSize:50}).setScrollFactor(0);
+    this.lastLapTimeLabel=this.add.text(50,150,"0:00:00", {fontSize:50}).setScrollFactor(0);
+    this.lapLabel=this.add.text(350,50,"Lap: 1/"+this.map.lapCount, {fontSize:50}).setScrollFactor(0);
     this.startTime;
     this.lapStartTime;
     this.raceActive=false;
+
+    this.startRace();
     
-    /*
-    this.add.sprite(300,250,"car").setTint(0x00ff00).setScale(0.125).setRotation(90*Math.PI/180);
-    this.add.sprite(200,275,"car").setTint(0x0000ff).setScale(0.125).setRotation(90*Math.PI/180);
-    this.add.sprite(300,275,"car").setTint(0xffff00).setScale(0.125).setRotation(90*Math.PI/180);
-    */
   }
   
-  startRace(time) {
+  startRace() {
     this.raceActive=true;
-    this.startTime=Date.now();
+    this.startTime=this.time.now;
+    this.player.start(this.startTime);
   }
   
+  displayLapTime(time) {
+    this.lastLapTimeLabel.text = this.msToString(time);
+  }
   
-  update(time,delta) {
-    //console.log(this.time.now())
-    this.controller.update(delta)
-    this.player.update(time, delta)
-    this.map.update(time, delta);
-    
-    if (this.raceActive) {
-      
-      const elapsed = Date.now()-this.startTime;
-      
-      const totalCents = Math.floor(elapsed/20)
+  msToString(time) {
+    const totalCents = Math.floor(time/10)
       let cents = totalCents%100;
       if (cents<10) {
         cents="0"+""+cents;
@@ -80,7 +75,29 @@ export default class Game extends Phaser.Scene {
          secs = ""+"0"+secs;
        }
        const mins = Math.floor(totalSecs/60)
-      this.totalTimeLabel.text=mins+":"+secs+":"+cents;
+      return mins+":"+secs+":"+cents;
+  }
+
+  finished() {
+    this.raceActive = false;
+  }
+
+  setLapLabel(lap, total) {
+    this.lapLabel.text = "Lap: "+lap+"/"+total;
+  }
+
+  update(time,delta) {
+    if (this.raceActive) {
+      this.controller.update(delta)
+      this.player.update(time, delta)
+    }
+    this.map.update(time, delta);
+    
+    if (this.raceActive) {
+      const totalElapsed = time-this.startTime;
+      this.totalTimeLabel.text=this.msToString(totalElapsed);
+      const lapElapsed = time-this.player.lapStartTime;
+      this.lapTimeLabel.text = this.msToString(lapElapsed);
     }
   }
 }

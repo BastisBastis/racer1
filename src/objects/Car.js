@@ -76,7 +76,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     const lapTime= time-this.lapStartTime;
     this.lapStartTime=time;
     this.lapTimes.push(lapTime);
-    console.log(lapTime)
+
   }
   
   start(time) {
