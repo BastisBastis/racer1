@@ -77,7 +77,6 @@ export default class Road extends Phaser.GameObjects.Polygon {
     
     this.island = scene.add.polygon(x, y, innerPoints, bg).setOrigin(0,0);
     
-    
   }
   
   

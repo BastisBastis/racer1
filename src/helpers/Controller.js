@@ -10,8 +10,8 @@ export default class Controller {
     this.steeringTouch = false;
     
     //this.movementRect=scene.add.rectangle(scene.cameras.main.width-150,scene.cameras.main.height-150,275,275,0x000000,0.3);
-    const steeringOrigin = scene.add.circle(scene.cameras.main.width-100,100,30,0x000000,0.0);
-    const steeringPoint = scene.add.circle(50,50,10,0x882222,0.0)
+    const steeringOrigin = scene.add.circle(scene.cameras.main.width-100,100,30,0x000000,0.0).setScrollFactor(0);
+    const steeringPoint = scene.add.circle(50,50,10,0x882222,0.0).setScrollFactor(0);
     
     //enable multi touch
     scene.input.addPointer(3);
@@ -67,8 +67,8 @@ export default class Controller {
           deltaY = deltaY>0 ? deltaY-10 : deltaY+10;
         }
         
-        steeringPoint.x = steeringOrigin.x-deltaX;
-        steeringPoint.y = steeringOrigin.y-deltaY;
+        steeringPoint.x = steeringOrigin.x-deltaX/2;
+        steeringPoint.y = steeringOrigin.y-deltaY/2;
         
         this.steeringTouch.accelerate=deltaY/(maxJoystick-10);
         this.steeringTouch.turn=-deltaX/(maxJoystick-10);

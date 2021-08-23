@@ -5,11 +5,11 @@ import Phaser from "phaser"
 export default class Car extends Phaser.Physics.Matter.Sprite {
   
   constructor(scene,color,x,y) {
-    super(scene.matter.world,200,250,"car")
+    super(scene.matter.world,x,y,"car");
     
     this.scene=scene;
     
-    this.setTint(0xff0000);
+    this.setTint(color);
     this.setScale(0.125);
     this.setOrigin(0.25,0.5);
     this.body.position.x-=this.width*0.0625/2
@@ -21,7 +21,13 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     this.airFric=0.05;
     this.setFrictionAir(0.05);
     //this.setMass(10);
-    
+    this.setCollisionGroup(1);
+    this.setCollidesWith([0,1,3,4]);
+    this.checkpointsPassed=-1;
+    this.finishedLaps=0;
+    this.lapTimes=[];
+    this.startTime;
+    this.lapStartTime;
     
     scene.add.existing(this);
     
@@ -52,7 +58,33 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     }
   }
   
-  update(delta) {
+  setMapDetails(checkpointCount,lapCount) {
+    this.checkpointsPassed=checkpointCount-1;
+    this.lapCount = lapCount;
+  }
+  
+  passCheckpoint(i,checkpointCount, time) {
+    const tmpPassed =this.checkpointsPassed;
+    this.checkpointsPassed = (this.checkpointsPassed + 1) % checkpointCount == i ? i : this.checkpointsPassed;
+    if (tmpPassed!=this.checkpointsPassed && this.checkpointsPassed == checkpointCount-1) {
+      this.finishLap(time);
+    }
+  }
+  
+  finishLap (time) {
+    this.finishedLaps+=1;
+    const lapTime= time-this.lapStartTime;
+    this.lapStartTime=time;
+    this.lapTimes.push(lapTime);
+    console.log(lapTime)
+  }
+  
+  start(time) {
+    this.startTime=time;
+    this.lapStartTime=time;
+  }
+  
+  update(time,delta) {
     
     if (!this.scene.road.contains(this.x,this.y)) {
       
