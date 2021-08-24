@@ -49,9 +49,35 @@ export default class Game extends Phaser.Scene {
     this.lapStartTime;
     this.raceActive=false;
 
-    this.startRace();
+    this.countdown=5;
+    this.countdownLight = this.add.circle(this.cameras.main.width/2,140, 30, 0x0000ff,0).setScrollFactor(0);
+    this.proceedCountdown();
     
   }
+  
+  proceedCountdown() {
+    this.countdown-=1;
+    const colors=[0x999999,0x00ff00,0xffff00,0xff0000,0x123568];
+    if (this.countdown===3) {
+      console.log(1)
+      this.countdownLight.fillAlpha=1.0
+    } else if (this.countdown===1) {
+      this.startRace()
+    }
+    
+    this.countdownLight.fillColor=colors[this.countdown];
+    
+    if (this.countdown>0) {
+      
+      setTimeout(()=> {
+        this.proceedCountdown()
+      }, 1500);
+      
+    } else {
+      this.countdownLight.destroy()
+    }
+  }
+  
   
   startRace() {
     this.raceActive=true;
