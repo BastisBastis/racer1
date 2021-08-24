@@ -4,7 +4,7 @@ import Car from "./Car"
 
 export default class Map {
   
-  constructor (scene, road, checkpoints, bg) {
+  constructor (scene, road, checkpoints, startPoints, bg) {
     this.scene =scene;
     scene.cameras.main.setBackgroundColor(bg);
     this.road = road;
@@ -12,11 +12,11 @@ export default class Map {
     this.cars=[];
     this.lapCount=3;
     this.shouldStart=true;
-    
+    this.startPoints = startPoints
     
   }
   
-  static mapFromData(scene,roadData,wallData,bounds, checkpoints, finishLine,bg) {
+  static mapFromData(scene,roadData,wallData,bounds, checkpoints, finishLine, startPoints, bg) {
     
     
     const road = Road.roadFromData(
@@ -29,6 +29,9 @@ export default class Map {
       roadData.color,
       bg
     );
+
+    
+
     for (const wd of wallData) {
       
       const shape = scene.add.polygon(wd.x,wd.y,wd.points,wd.color);
@@ -72,7 +75,7 @@ export default class Map {
    scene.add.polygon(finishLine.x, finishLine.y, finishLine.points, 0xffffff);
 
     
-    return new Map(scene,road,checkpointShapes,bg);
+    return new Map(scene,road,checkpointShapes, startPoints,bg);
   }
   
   static defaultMap(scene) {
@@ -201,13 +204,28 @@ export default class Map {
         10,0
       ]
     };
+
+    const startPoints = [
+      {x:300, y:330},
+      {x:300, y:270},
+      {x:230, y:230},
+      {x:230, y:270},
+      {x:160, y:230},
+      {x:160, y:270}
+    ]
     
-    return Map.mapFromData(scene,roadData,walls,bounds,checkpoints, finishLine,0x337733)
+    return Map.mapFromData(scene,roadData,walls,bounds,checkpoints, finishLine, startPoints,0x337733)
   }
+
+  
   
   addCar(car) {
-    this.cars.push(car);
-    car.setMapDetails(this.checkpoints.length, this.lapCount);
+    if (this.cars.length < this.startPoints.length) {
+      const {x, y} = this.startPoints[this.cars.length];
+      car.setPosition(x, y);
+      this.cars.push(car);
+      car.setMapDetails(this.checkpoints.length, this.lapCount);
+    }
   }
   
   update(time, delta) {

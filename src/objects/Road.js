@@ -10,11 +10,30 @@ class RoadPoints {
     this.inner = [x, y+width];
     this.roadWidth = width;
     this.currDir = dir;
+    this.navPoints = [[],[],[]];
+    this.navPointFrequency = 10;
   }
   
   addStraight(dist) {
-    
-    
+    const startX = this.outer[0];
+    const startY = this.outer[1];
+    for (let i = 0; i<dist;i=i+this.navPointFrequency) {
+      const outerX = startX + i*Math.cos(angleToRad(this.currDir));
+      const outerY = startY + i*Math.sin(angleToRad(this.currDir));
+      this.navPoints[0].push({
+        x:outerX+this.roadWidth*0.2*Math.cos(angleToRad(this.currDir+90)),
+        y:outerY+this.roadWidth*0.2*Math.sin(angleToRad(this.currDir+90))
+      });
+      this.navPoints[1].push({
+        x:outerX+this.roadWidth*0.5*Math.cos(angleToRad(this.currDir+90)),
+        y:outerY+this.roadWidth*0.5*Math.sin(angleToRad(this.currDir+90))
+      });
+      this.navPoints[2].push({
+        x:outerX+this.roadWidth*0.8*Math.cos(angleToRad(this.currDir+90)),
+        y:outerY+this.roadWidth*0.8*Math.sin(angleToRad(this.currDir+90))
+      });
+    }
+
     const newX1 = this.outer[0] + dist * Math.cos(angleToRad(this.currDir));
     const newY1 = this.outer[1] + dist * Math.sin(angleToRad(this.currDir));
     const newX2 = newX1 + this.roadWidth*Math.cos(angleToRad(this.currDir+90));
@@ -30,11 +49,26 @@ class RoadPoints {
       ...this.inner
     ];
     
-    
   }
   
   addTurn(turnDir,stepDist, steps, stepAngle) {
     for (let i = 0; i < steps; i++) {
+
+      const outerX = this.outer[0];
+      const outerY = this.outer[1];
+      this.navPoints[0].push({
+        x:outerX+this.roadWidth*0.2*Math.cos(angleToRad(this.currDir+90)),
+        y:outerY+this.roadWidth*0.2*Math.sin(angleToRad(this.currDir+90))
+      });
+      this.navPoints[1].push({
+        x:outerX+this.roadWidth*0.5*Math.cos(angleToRad(this.currDir+90)),
+        y:outerY+this.roadWidth*0.5*Math.sin(angleToRad(this.currDir+90))
+      });
+      this.navPoints[2].push({
+        x:outerX+this.roadWidth*0.8*Math.cos(angleToRad(this.currDir+90)),
+        y:outerY+this.roadWidth*0.8*Math.sin(angleToRad(this.currDir+90))
+      });
+
       let newX1, newX2, newY1, newY2;
       if (turnDir === "l") {
         this.currDir = (this.currDir - stepAngle + 360) % 360
@@ -60,6 +94,9 @@ class RoadPoints {
       newY2,
       ...this.inner
     ]
+
+      
+
     }
   }
   
@@ -67,22 +104,34 @@ class RoadPoints {
 
 export default class Road extends Phaser.GameObjects.Polygon {
   
-  constructor (scene,x,y,outerPoints,innerPoints,fill,bg,cars,obstacles) {
+  constructor (scene,x,y,outerPoints,innerPoints,navPoints, fill,bg,cars,obstacles) {
     
     
     super(scene,x,y,outerPoints,fill);
     this.scene = scene;
     scene.add.existing(this);
     this.setOrigin(0,0);
+    this.navPoints=navPoints;
     
     this.island = scene.add.polygon(x, y, innerPoints, bg).setOrigin(0,0);
     
+    let i=0;
+    const clrs = [0xff0000,0x00ff00,0x0000ff];
+    for (const path of this.navPoints) {
+      for (const p of path) {
+        scene.add.circle(p.x, p.y, 2, clrs[i]);
+      }
+      i++;
+    }
+
   }
   
   
   contains(x,y) {
     return Phaser.Geom.Polygon.Contains(this.geom,x,y) && !Phaser.Geom.Polygon.Contains(this.island.geom,x,y)
   }
+
+  
   
   static roadFromData(scene,x,y,width,dir,data,roadColor,bg) {
     const roadPoints = new RoadPoints(x, y, width, dir);
@@ -100,7 +149,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
           
       }
     }
-    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, 0x888888, 0x337733)
+    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadPoints.navPoints, 0x888888, 0x337733)
   }
   
   static defaultRoad(scene) {

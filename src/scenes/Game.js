@@ -30,10 +30,16 @@ export default class Game extends Phaser.Scene {
     this.road = this.map.road;
     //this.road =Road.defaultRoad(this);
     
-    this.player = new Player(this, 0xff0000, 200,250);
-    const removeLater = new Car(this,0x00ff00, 150, 250)
-    
+    this.player = new Player(this, 0xff0000, 100,230);
     this.map.addCar(this.player);
+    this.opponents = [];
+    const opponentColors=[0xffff00, 0x00ff00, 0x0000ff]
+    for (let i=0; i<1;i++) {
+      const car = new Car(this, opponentColors[i], 0,0)
+      this.opponents.push(car);
+      this.map.addCar(car);
+    }
+    
     
     this.controller= new Controller(this, this.player)
     
@@ -59,7 +65,6 @@ export default class Game extends Phaser.Scene {
     this.countdown-=1;
     const colors=[0x999999,0x00ff00,0xffff00,0xff0000,0x123568];
     if (this.countdown===3) {
-      console.log(1)
       this.countdownLight.fillAlpha=1.0
     } else if (this.countdown===1) {
       this.startRace()
