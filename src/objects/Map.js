@@ -133,7 +133,7 @@ export default class Map {
         },
         {
           type:0,
-          dist:200
+          dist:250
         },
         {
           type:1,
@@ -155,7 +155,7 @@ export default class Map {
         },
         {
           type:0,
-          dist:39
+          dist:38
         }
       ]
     }
@@ -224,7 +224,7 @@ export default class Map {
       const {x, y} = this.startPoints[this.cars.length];
       car.setPosition(x, y);
       this.cars.push(car);
-      car.setMapDetails(this.checkpoints.length, this.lapCount);
+      car.setMapDetails(this.checkpoints.length, this.lapCount, this.road.navPoints);
     }
   }
   

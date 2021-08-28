@@ -119,7 +119,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
     const clrs = [0xff0000,0x00ff00,0x0000ff];
     for (const path of this.navPoints) {
       for (const p of path) {
-        scene.add.circle(p.x, p.y, 2, clrs[i]);
+        //scene.add.circle(p.x, p.y, 2, clrs[i]);
       }
       i++;
     }

@@ -1,6 +1,7 @@
 import Phaser from "phaser"
 import carImg from '../assets/car1.png';
-import Car from "../objects/Car"
+//import Car from "../objects/Car"
+import NPC from "../objects/NPC"
 import Controller from "../helpers/Controller"
 import Map from "../objects/Map"
 import Player from "../objects/Player";
@@ -30,14 +31,20 @@ export default class Game extends Phaser.Scene {
     this.road = this.map.road;
     //this.road =Road.defaultRoad(this);
     
-    this.player = new Player(this, 0xff0000, 100,230);
+    this.player = new Player(this, 0xff0000, 100,230,0,"Red");
     this.map.addCar(this.player);
     this.opponents = [];
-    const opponentColors=[0xffff00, 0x00ff00, 0x0000ff]
-    for (let i=0; i<1;i++) {
-      const car = new Car(this, opponentColors[i], 0,0)
-      this.opponents.push(car);
+    const opponentColors=[0xffff00, 0x00ff00, 0x0000ff];
+    const opponentNames=["Yellow","Green","Blue"]
+    for (let i=0; i<3;i++) {
+      const car = new NPC(this, opponentColors[i], 0,0,i+1,opponentNames[i])
       this.map.addCar(car);
+      this.player.addOpponent(car);
+      car.setOpponents([this.player, ...this.opponents])
+      for (const opp of this.opponents) {
+        opp.addOpponent(car);
+      }
+      this.opponents.push(car);
     }
     
     
@@ -59,6 +66,17 @@ export default class Game extends Phaser.Scene {
     this.countdownLight = this.add.circle(this.cameras.main.width/2,140, 30, 0x0000ff,0).setScrollFactor(0);
     this.proceedCountdown();
     
+    this.testLabel=this.add.text(50,300,"", {fontSize:50}).setScrollFactor(0);
+    
+    
+    
+  }
+  
+  printText(text){
+    if (this.testLabel)
+      this.testLabel.text=text;
+    else
+      console.log(text)
   }
   
   proceedCountdown() {
@@ -76,7 +94,7 @@ export default class Game extends Phaser.Scene {
       
       setTimeout(()=> {
         this.proceedCountdown()
-      }, 1500);
+      }, 200)//1500);
       
     } else {
       this.countdownLight.destroy()
@@ -88,6 +106,9 @@ export default class Game extends Phaser.Scene {
     this.raceActive=true;
     this.startTime=this.time.now;
     this.player.start(this.startTime);
+    for (const opp of this.opponents) {
+      opp.start(this.startTime)
+    }
   }
   
   displayLapTime(time) {
@@ -120,7 +141,10 @@ export default class Game extends Phaser.Scene {
   update(time,delta) {
     if (this.raceActive) {
       this.controller.update(delta)
-      this.player.update(time, delta)
+      this.player.update(time, delta);
+      for (const opp of this.opponents) {
+        opp.update(time,delta)
+      }
     }
     this.map.update(time, delta);
     
