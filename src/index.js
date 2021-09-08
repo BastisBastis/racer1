@@ -1,5 +1,8 @@
 import Phaser from 'phaser';
 import Game from "./scenes/Game"
+import RaceOver from "./scenes/RaceOver"
+import UI from "./scenes/UI"
+import Test3d from "./scenes/Test3d"
 
 const config = {
     type: Phaser.AUTO,
@@ -18,7 +21,10 @@ const config = {
       }
   },
     scene: [
-      Game
+      Test3d,
+      Game,
+      RaceOver,
+      UI
     ]
 };
 

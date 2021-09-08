@@ -35,6 +35,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     
     this.maxSpeed=5;
     this.accSpeed =0.0015
+    this.setBounce(0)
     
     this.airFric=0.05;
     this.setFrictionAir(0.05);
@@ -44,6 +45,8 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     this.checkpointsPassed=-1;
     this.finishedLaps=0;
     this.lapTimes=[];
+    this.finished=false;
+    this.finishTime;
     this.startTime;
     this.lapStartTime;
     this.navPoints;
@@ -52,6 +55,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     this.opponents=[];
     
     this.closestNavPoint;
+    
     
     scene.add.existing(this);
     
@@ -63,8 +67,6 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     //const turnSpeed=0.02 * this.getSpeed();
     
     const turnSpeed=0.04 * Math.pow(this.getSpeed(),0.3);
-    
-    //console.log("speed: "+this.getSpeed()+ " ts: " + turnSpeed);
     
     this.setAngularVelocity(dir*turnSpeed);
     
@@ -91,27 +93,42 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     }
   }
   
-  setMapDetails(checkpointCount,lapCount,navPoints) {
+  setMapDetails(checkpointCount,lapCount,navPoints,optimalPath) {
     this.checkpointsPassed=checkpointCount-1;
     this.lapCount = lapCount;
     this.navPoints=navPoints;
     this.findClosestNavPoint(-1);
+    this.optimalPath=optimalPath
+    //console.log(optimalPath)
   }
   
   passCheckpoint(i,checkpointCount, time) {
+    
     const tmpPassed =this.checkpointsPassed;
-    this.checkpointsPassed = (this.checkpointsPassed + 1) % checkpointCount == i ? i : this.checkpointsPassed;
+    this.checkpointsPassed = (this.checkpointsPassed-0 + 1) % checkpointCount == i ? i : this.checkpointsPassed;
     if (tmpPassed!=this.checkpointsPassed && this.checkpointsPassed == checkpointCount-1) {
       this.finishLap(time);
     }
+    
+    
+    //For checking checkpoint times
+    /*
+    if (tmpPassed!=this.checkpointsPassed)
+      this.scene.displayLapTime(time-this.startTime);
+    */
   }
   
   finishLap (time) {
-    this.finishedLaps+=1;
-    const lapTime= time-this.lapStartTime;
-    this.lapStartTime=time;
-    this.lapTimes.push(lapTime);
-
+    if (!this.finished) {
+      this.finishedLaps+=1;
+      const lapTime= time-this.lapStartTime;
+      this.lapStartTime=time;
+      this.lapTimes.push(lapTime);
+      if (this.lapTimes.length === this.lapCount) {
+        this.finishTime=time-this.startTime;
+        this.finished = true;
+      }
+    }
   }
   
   start(time) {
@@ -175,6 +192,7 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     this.updateRoadPosition();
     
     if (!this.scene.road.contains(this.x,this.y)) {
+      //console.log(time+ " not road " + this.name)
       
       this.setFrictionAir(this.airFric*2)
     }

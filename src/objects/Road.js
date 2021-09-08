@@ -104,7 +104,7 @@ class RoadPoints {
 
 export default class Road extends Phaser.GameObjects.Polygon {
   
-  constructor (scene,x,y,outerPoints,innerPoints,navPoints, fill,bg,cars,obstacles) {
+  constructor (scene,x,y,outerPoints,innerPoints,navPoints,optimalPath, fill,bg,cars,obstacles) {
     
     
     super(scene,x,y,outerPoints,fill);
@@ -112,20 +112,45 @@ export default class Road extends Phaser.GameObjects.Polygon {
     scene.add.existing(this);
     this.setOrigin(0,0);
     this.navPoints=navPoints;
+    this.optimalPath=optimalPath;
     
     this.island = scene.add.polygon(x, y, innerPoints, bg).setOrigin(0,0);
     
+    
+    //this.drawNavPoints()
+    this.drawOptimalPath();
+    
+
+  }
+  
+  drawNavPoints() {
     let i=0;
     const clrs = [0xff0000,0x00ff00,0x0000ff];
     for (const path of this.navPoints) {
       for (const p of path) {
-        //scene.add.circle(p.x, p.y, 2, clrs[i]);
+        this.scene.add.circle(p.x, p.y, 2, clrs[i]);
       }
       i++;
     }
-
   }
   
+  drawOptimalPath() {
+    const findPathAtPoint = (pointIndex) => {
+      for (const op of this.optimalPath) {
+        if (pointIndex<op.point)
+          return op.path;
+      }
+      console.log("path not found "+pointIndex);
+      return 1;
+    }
+    
+    /*
+  for (const i in this.navPoints[0])  {
+      const p = this.navPoints[findPathAtPoint(i)][i];
+      this.scene.add.circle(p.x,p.y,5,0xffffff);
+    }
+    */
+  }
   
   contains(x,y) {
     return Phaser.Geom.Polygon.Contains(this.geom,x,y) && !Phaser.Geom.Polygon.Contains(this.island.geom,x,y)
@@ -133,7 +158,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
 
   
   
-  static roadFromData(scene,x,y,width,dir,data,roadColor,bg) {
+  static roadFromData(scene,x,y,width,dir,data,optimalPath,roadColor,bg) {
     const roadPoints = new RoadPoints(x, y, width, dir);
 
     for (let entry of data) {
@@ -149,7 +174,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
           
       }
     }
-    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadPoints.navPoints, 0x888888, 0x337733)
+    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadPoints.navPoints, optimalPath,0x888888, 0x337733)
   }
   
   static defaultRoad(scene) {

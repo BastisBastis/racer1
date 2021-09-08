@@ -1,6 +1,6 @@
 import Phaser from "phaser"
 import Car from "../objects/Car"
-
+import EventsCenter from "./EventsCenter"
 
 export default class Controller {
   constructor(scene,player) {
@@ -32,9 +32,13 @@ export default class Controller {
           turn:0
         };
         //steeringOrigin.setPosition(pointer.position.x, pointer.position.y);
+        /*
         steeringOrigin.fillAlpha = 0.3;
         steeringPoint.setPosition(steeringOrigin.x, steeringOrigin.y);
         steeringPoint.fillAlpha = 1;
+        */
+       EventsCenter.emit("showSteering",true);
+        
         
       } 
     });
@@ -43,8 +47,9 @@ export default class Controller {
       if (this.steeringTouch && this.steeringTouch.id === pointer.id) {
         
         this.steeringTouch = false;
-        steeringOrigin.fillAlpha = 0.0;
-        steeringPoint.fillAlpha = 0.0;
+        //steeringOrigin.fillAlpha = 0.0;
+        //steeringPoint.fillAlpha = 0.0;
+        EventsCenter.emit("showSteering",false);
         
       } 
     });
@@ -67,8 +72,9 @@ export default class Controller {
           deltaY = deltaY>0 ? deltaY-10 : deltaY+10;
         }
         
-        steeringPoint.x = steeringOrigin.x-deltaX/2;
-        steeringPoint.y = steeringOrigin.y-deltaY/2;
+        //steeringPoint.x = steeringOrigin.x-deltaX/2;
+        //steeringPoint.y = steeringOrigin.y-deltaY/2;
+        EventsCenter.emit("adjustSteeringPosition",{deltaX:deltaX,deltaY:deltaY});
         
         this.steeringTouch.accelerate=deltaY/(maxJoystick-10);
         this.steeringTouch.turn=-deltaX/(maxJoystick-10);

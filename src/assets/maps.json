@@ -1,0 +1,321 @@
+[
+  {
+  "title": "Map 1",
+  "roadData": {
+    "x": 150,
+    "y": 200,
+    "width": 100,
+    "dir": 0,
+    "color": 8947848,
+    "path": [
+      {
+        "type": 0,
+        "dist": 200
+      },
+      {
+        "type": 1,
+        "dir": "l",
+        "stepDist": 5,
+        "steps": 10,
+        "stepAngle": 9
+      },
+      {
+        "type": 0,
+        "dist": 5
+      },
+      {
+        "type": 1,
+        "dir": "r",
+        "stepDist": 5,
+        "steps": 20,
+        "stepAngle": 9
+      },
+      {
+        "type": 0,
+        "dist": 55
+      },
+      {
+        "type": 1,
+        "dir": "r",
+        "stepDist": 10,
+        "steps": 5,
+        "stepAngle": 9
+      },
+      {
+        "type": 0,
+        "dist": 200
+      },
+      {
+        "type": 1,
+        "dir": "r",
+        "stepDist": 5,
+        "steps": 5,
+        "stepAngle": 9
+      },
+      {
+        "type": 0,
+        "dist": 250
+      },
+      {
+        "type": 1,
+        "dir": "r",
+        "stepDist": 5,
+        "steps": 10,
+        "stepAngle": 9
+      },
+      {
+        "type": 0,
+        "dist": 50
+      },
+      {
+        "type": 1,
+        "dir": "r",
+        "stepDist": 5,
+        "steps": 10,
+        "stepAngle": 9
+      },
+      {
+        "type": 0,
+        "dist": 38
+      }
+    ],
+    "optimalPath": [
+      {
+        "point": 23,
+        "path": 0
+      },
+      {
+        "point": 30,
+        "path": 1
+      },
+      {
+        "point": 130,
+        "path": 2
+      },
+      {
+        "point": 200,
+        "path": 1
+      }
+    ]
+  },
+  "walls": [
+    {
+      "points": [
+        150,
+        850,
+        375,
+        850,
+        495,
+        720,
+        495,
+        670,
+        515,
+        670,
+        515,
+        730,
+        385,
+        870,
+        150,
+        870
+      ],
+      "color": 8925952,
+      "x": 410,
+      "y": 280
+    }
+  ],
+  "bounds": {
+    "x": 300,
+    "y": 300,
+    "w": 800,
+    "h": 600
+  },
+  "checkpoints": [
+    {
+      "centerX": 440,
+      "centerY": 300,
+      "angle": 90
+    },
+    {
+      "centerX": 300,
+      "centerY": 360,
+      "angle": 180
+    },
+    {
+      "centerX": 330,
+      "centerY": 360,
+      "angle": 0
+    }
+  ],
+  "finishLine": {
+    "x": 330,
+    "y": 250,
+    "points": [
+      0,
+      0,
+      0,
+      100,
+      10,
+      100,
+      10,
+      0
+    ]
+  },
+  "startPoints": [
+    {
+      "x": 300,
+      "y": 230
+    },
+    {
+      "x": 300,
+      "y": 270
+    },
+    {
+      "x": 230,
+      "y": 230
+    },
+    {
+      "x": 230,
+      "y": 270
+    },
+    {
+      "x": 160,
+      "y": 230
+    },
+    {
+      "x": 160,
+      "y": 270
+    }
+  ],
+  "bg": 3372851
+},
+{
+  "title": "Map 2",
+  "roadData": {
+    "x": 150,
+    "y": 200,
+    "width": 100,
+    "dir": 0,
+    "color": 8947848,
+    "path": [
+      {
+        "type": 0,
+        "dist": 200
+      },
+      {
+        "type": 1,
+        "dir": "r",
+        "stepDist": 10,
+        "steps": 90,
+        "stepAngle": 2
+      },
+      {
+        "type": 0,
+        "dist": 300
+      },
+      {
+        "type": 1,
+        "dir": "r",
+        "stepDist": 10,
+        "steps": 90,
+        "stepAngle": 2
+      },
+      {
+        "type": 0,
+        "dist": 100
+      }
+    ],
+    "optimalPath": [
+      {
+        "point": 2000,
+        "path": 2
+      }
+    ]
+  },
+  "walls": [
+    {
+      "points": [
+        0,
+        0,
+        600,
+        0,
+        600,
+        10,
+        0,
+        10
+      ],
+      "color": 8925952,
+      "x": 200,
+      "y": 590
+    }
+  ],
+  "bounds": {
+    "x": 200,
+    "y": 550,
+    "w": 1600,
+    "h": 1300
+  },
+  "checkpoints": [
+    {
+      "centerX": 440,
+      "centerY": 590,
+      "angle": 90
+    },
+    {
+      "centerX": 300,
+      "centerY": 590,
+      "angle": 180
+    },
+    {
+      "centerX": -40,
+      "centerY": 590,
+      "angle": 270
+    },
+    {
+      "centerX": 330,
+      "centerY": 590,
+      "angle": 0
+    }
+  ],
+  "finishLine": {
+    "x": 330,
+    "y": 250,
+    "points": [
+      0,
+      0,
+      0,
+      100,
+      10,
+      100,
+      10,
+      0
+    ]
+  },
+  "startPoints": [
+    {
+      "x": 300,
+      "y": 230
+    },
+    {
+      "x": 300,
+      "y": 270
+    },
+    {
+      "x": 230,
+      "y": 230
+    },
+    {
+      "x": 230,
+      "y": 270
+    },
+    {
+      "x": 160,
+      "y": 230
+    },
+    {
+      "x": 160,
+      "y": 270
+    }
+  ],
+  "bg": 3372851
+}
+]

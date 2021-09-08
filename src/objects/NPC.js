@@ -14,16 +14,25 @@ export default class NPC extends Car {
     const showMarker = 0;
     this.targetMarker = scene.add.circle(0,0,5,0xffffff,showMarker);
     
-    this.willingnessToChangePath=0.01;
+    this.willingnessToChangePath=0.03;
     this.pathChangeTarget=-1;
     
     
     this.gpsTargetRange=8;
     
     this.acceptedDistAhead=2;
-    this.reduceAcceleration=0;
+    this.reduceAcceleration=0.4;
+    
+    this.turnVariation=0.2;
     
     this.roadPosition;
+    
+    this.optimalPath=[{point:2000,path:2}];
+    
+    this.shouldAutoDrive=true;
+    
+    //this.label= scene.add.text(this.x,this.y,"2", {fontSize:50}).setDepth(1000)
+    
   }
   
   start(time) {
@@ -47,25 +56,31 @@ export default class NPC extends Car {
     
     
     for (const opp of this.opponents) {
-      if (opp.closestNavPoint.pathIndex == this.closestNavPoint.pathIndex && opp.closestNavPoint.pointIndex >= this.closestNavPoint.pointIndex  && opp.closestNavPoint.pointIndex < this.closestNavPoint.pointIndex + 4) {
+      if (opp.closestNavPoint.pathIndex == this.closestNavPoint.pathIndex && opp.closestNavPoint.pointIndex >= this.closestNavPoint.pointIndex-2  && opp.closestNavPoint.pointIndex <= this.closestNavPoint.pointIndex + 3) {
         //Opponent is on the same path and very close (likely touching))
         
         
         if (this.roadPosition< opp.roadPosition) {
           if (this.closestNavPoint.pathIndex ==0) {
-            this.reduceAcceleration=1;
+            //console.log(this.name+" slw pth: " + this.closestNavPoint.pathIndex+ " opp: "+opp.name)
+            
+            this.reduceAcceleration=0.4;
           } else {
+            //console.log(this.name+ " forced by "+opp.name+ " to "+(Number(this.closestNavPoint.pathIndex)-1))
             return {forced:true, target:this.closestNavPoint.pathIndex-1}
           }
         } else {
           if (this.closestNavPoint.pathIndex ==2) {
-            this.reduceAcceleration=1;
+            //console.log(this.name+" slw pth: " + this.closestNavPoint.pointIndex+ " opp: "+opp.name+" "+opp.closestNavPoint.pointIndex)
+            
+            this.reduceAcceleration=0.4;
           } else {
+            //console.log(this.name+ " forced by "+opp.name+ " to "+(Number(this.closestNavPoint.pathIndex)+1))
             return {forced:true, target:Number(this.closestNavPoint.pathIndex)+1}
           }
         }
       }
-      if (opp.closestNavPoint.pathIndex == this.closestNavPoint.pathIndex && opp.closestNavPoint.pointIndex > this.closestNavPoint.pointIndex +3 && opp.closestNavPoint.pointIndex < this.closestNavPoint.pointIndex + this.acceptedDistAhead) {
+      if (opp.closestNavPoint.pathIndex == this.closestNavPoint.pathIndex && opp.closestNavPoint.pointIndex > this.closestNavPoint.pointIndex +2 && opp.closestNavPoint.pointIndex < this.closestNavPoint.pointIndex + this.acceptedDistAhead) {
         //Opponent is ahead within x points in NPCs path but not too close
         
         
@@ -102,12 +117,12 @@ export default class NPC extends Car {
       
       if (forcedToSwitch.forced && forcedToSwitch.target>=0) {
         
-        console.log(this.name+": "+forcedToSwitch.target)
+        
         
         targetPath=forcedToSwitch.target;
       } else if (forcedToSwitch.forced) {
         
-        console.log(this.name+": "+forcedToSwitch.target)
+        
         
         if (this.closestNavPoint.pathIndex!=potentialTarget) {
           targetPath=potentialTarget
@@ -122,7 +137,8 @@ export default class NPC extends Car {
       targetPath=potentialTarget;
       
     }
-    this.pathChangeTarget=targetPath;
+    if (this.canSwitchTo(targetPath))
+      this.pathChangeTarget=targetPath;
     }
     
    
@@ -139,7 +155,24 @@ export default class NPC extends Car {
   }
   
   findOptimalPath() {
-    return 2;
+    for (const p of this.optimalPath) {
+      
+      if (this.closestNavPoint.pointIndex < p.point) {
+        return p.path;
+      }
+    }
+    return 0;
+  }
+  
+  canSwitchTo(target) {
+    
+    for (const opp of this.opponents) {
+      if (this.closestNavPoint.pointIndex < opp.closestNavPoint.pointIndex+1  && this.closestNavPoint.pointIndex > opp.closestNavPoint.pointIndex -1 && target == opp.closestNavPoint.pathIndex) {
+        //console.log(this.name+" cannot switch to "+target+" bc "+opp.name)
+        return false;
+      }
+    }
+    return true;
   }
   
   turnToTarget() {
@@ -161,27 +194,53 @@ export default class NPC extends Car {
     }
     
     const randTurnFactor =0.2;
-    const randTurnRange = Math.abs(turnAmount*randTurnFactor);
+    const randTurnRange = Math.abs(turnAmount*this.turnVariation);
     const randTurn = Math.random()*randTurnRange - randTurnRange/2;
     
     this.turn(turnAmount + randTurn)
     //this.scene.printText(turnAmount);
   }
   
+  abortPathChange() {
+    if (this.pathChangeTarget>=0 && !this.canSwitchTo(this.pathChangeTarget)) {
+      this.pathChangeTarget=-1;
+    }
+  }
   
-  
-  
-  update(time,delta) {
-this.accelerate(0.16);
-  
+  checkBlocking() {
     
+  }
+  
+  autoDrive(time,delta) {
     
-    this.findClosestNavPoint(5);
+    const acc =delta/100*(1-this.reduceAcceleration);
+    this.accelerate(acc);
+    this.reduceAcceleration=0;
     
+    this.checkBlocking();
+    
+    this.abortPathChange();
     
     this.pickTargetPoint(this.gpsTargetRange);
     
     this.turnToTarget();
+    
+    
+  }
+  
+  
+  update(time,delta) {
+    
+    this.findClosestNavPoint(5);
+    
+    if (this.shouldAutoDrive)
+      this.autoDrive(time,delta);
+    
+    
     super.update(time,delta);
+    
+    //this.label.setPosition(this.x,this.y);
+     
+    
   }
 }

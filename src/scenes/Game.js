@@ -5,10 +5,11 @@ import NPC from "../objects/NPC"
 import Controller from "../helpers/Controller"
 import Map from "../objects/Map"
 import Player from "../objects/Player";
+import EventsCenter from "../helpers/EventsCenter"
 
 export default class Game extends Phaser.Scene {
   constructor () {
-      super();
+      super({key:"Game"});
   }
 
   preload () {
@@ -17,7 +18,7 @@ export default class Game extends Phaser.Scene {
     
   create () {
     
-    
+    const demo=false;
 
     //World stuff
     this.matter.world.disableGravity();
@@ -26,17 +27,21 @@ export default class Game extends Phaser.Scene {
     //Camera Settings
     this.cameras.main.setBackgroundColor("#337733")
     
-    this.map = Map.defaultMap(this)
+    this.map = Map.defaultMap(this);
+    //this.map=Map.mapWithIndex(this,1);
     
     this.road = this.map.road;
-    //this.road =Road.defaultRoad(this);
+    
     
     this.player = new Player(this, 0xff0000, 100,230,0,"Red");
+    if (demo) {
+      this.player.shouldAutoDrive=true;
+    }
     this.map.addCar(this.player);
     this.opponents = [];
-    const opponentColors=[0xffff00, 0x00ff00, 0x0000ff];
-    const opponentNames=["Yellow","Green","Blue"]
-    for (let i=0; i<3;i++) {
+    const opponentColors=[0xffff00, 0x00ff00, 0x0000ff,0xff00ff,0x00ffff];
+    const opponentNames=["Yellow","Green","Blue","Purple","Cyan"]
+    for (let i=0; i<5;i++) {
       const car = new NPC(this, opponentColors[i], 0,0,i+1,opponentNames[i])
       this.map.addCar(car);
       this.player.addOpponent(car);
@@ -52,23 +57,20 @@ export default class Game extends Phaser.Scene {
     
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setZoom(1)
+    //this.cameras.main.scrollY=400;
     
-    
-    this.totalTimeLabel=this.add.text(50,50,"0:00:00", {fontSize:50}).setScrollFactor(0);
-    this.lapTimeLabel=this.add.text(50,100,"0:00:00", {fontSize:50}).setScrollFactor(0);
-    this.lastLapTimeLabel=this.add.text(50,150,"0:00:00", {fontSize:50}).setScrollFactor(0);
-    this.lapLabel=this.add.text(350,50,"Lap: 1/"+this.map.lapCount, {fontSize:50}).setScrollFactor(0);
     this.startTime;
     this.lapStartTime;
     this.raceActive=false;
+    this.raceStarted = false;
 
     this.countdown=5;
-    this.countdownLight = this.add.circle(this.cameras.main.width/2,140, 30, 0x0000ff,0).setScrollFactor(0);
+
     this.proceedCountdown();
     
     this.testLabel=this.add.text(50,300,"", {fontSize:50}).setScrollFactor(0);
     
-    
+    this.ui = this.scene.launch("UI",{lapCount:this.map.lapCount});
     
   }
   
@@ -83,27 +85,32 @@ export default class Game extends Phaser.Scene {
     this.countdown-=1;
     const colors=[0x999999,0x00ff00,0xffff00,0xff0000,0x123568];
     if (this.countdown===3) {
-      this.countdownLight.fillAlpha=1.0
+      //this.countdownLight.fillAlpha=1.0
+      EventsCenter.emit("showCountdown", true)
     } else if (this.countdown===1) {
       this.startRace()
+      
     }
     
-    this.countdownLight.fillColor=colors[this.countdown];
+    //this.countdownLight.fillColor=colors[this.countdown];
+    EventsCenter.emit("setCountdownColor",colors[this.countdown])
     
     if (this.countdown>0) {
       
       setTimeout(()=> {
         this.proceedCountdown()
-      }, 200)//1500);
+      }, 1500);
       
     } else {
-      this.countdownLight.destroy()
+      //this.countdownLight.destroy()
+      EventsCenter.emit("showCountdown",false)
     }
   }
   
   
   startRace() {
     this.raceActive=true;
+    this.raceStarted=true;
     this.startTime=this.time.now;
     this.player.start(this.startTime);
     for (const opp of this.opponents) {
@@ -112,7 +119,8 @@ export default class Game extends Phaser.Scene {
   }
   
   displayLapTime(time) {
-    this.lastLapTimeLabel.text = this.msToString(time);
+    //this.lastLapTimeLabel.text = this.msToString(time);
+    EventsCenter.emit('setLapTimeLabel', this.msToString(time));
   }
   
   msToString(time) {
@@ -131,28 +139,69 @@ export default class Game extends Phaser.Scene {
   }
 
   finished() {
+    if (this.raceActive){
+      
+      const sortedCars=[this.player, ...this.opponents].sort((a,b)=>{
+        
+        return a.finishTime-b.finishTime;
+      });
+      const results=[];
+      for (const car of sortedCars) {
+        results.push({
+          name:car.name,
+          lapTimes:car.lapTimes,
+          finishTime:car.finishTime
+          });
+      }
+      
+      setTimeout(()=>{this.showRaceOver(results) },1500);
+    }
     this.raceActive = false;
+  }
+  
+  showRaceOver(results) {
+    this.scene.stop("UI");
+    this.scene.launch("RaceOver",{results:results})
   }
 
   setLapLabel(lap, total) {
-    this.lapLabel.text = "Lap: "+lap+"/"+total;
+    //this.lapLabel.text = "Lap: "+lap+"/"+total;
+    EventsCenter.emit("setLapLabel","Lap: "+lap+"/"+total);
   }
 
   update(time,delta) {
-    if (this.raceActive) {
-      this.controller.update(delta)
+    
+    //if (this.input.activePointer.x>0) this.finished()()
+    
+    let raceOver=true;
+    for (const car of [this.player, ...this.opponents]) {
+      if (!car.finished) {
+        raceOver=false;
+      }
+    }
+    if (raceOver) {
+      this.finished();
+    }
+    
+    if (this.raceStarted) {
+      if (!this.player.finished) {
+        this.controller.update(delta)
+      }
       this.player.update(time, delta);
       for (const opp of this.opponents) {
         opp.update(time,delta)
       }
-    }
-    this.map.update(time, delta);
     
+    this.map.update(time, delta);
+    }
     if (this.raceActive) {
       const totalElapsed = time-this.startTime;
-      this.totalTimeLabel.text=this.msToString(totalElapsed);
-      const lapElapsed = time-this.player.lapStartTime;
-      this.lapTimeLabel.text = this.msToString(lapElapsed);
+      //this.totalTimeLabel.text=this.msToString(totalElapsed);
+      
+      EventsCenter.emit("setElapsedTimeLabel",this.msToString(totalElapsed))
+      
+      //const lapElapsed = time-this.player.lapStartTime;
+      //this.lapTimeLabel.text = this.msToString(lapElapsed);
     }
   }
 }
