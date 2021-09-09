@@ -1,4 +1,6 @@
 import Phaser from "phaser"
+import * as THREE from "three"
+import Graphics3d from "./Graphics3d"
 import carImg from '../assets/car1.png';
 //import Car from "../objects/Car"
 import NPC from "../objects/NPC"
@@ -71,6 +73,8 @@ export default class Game extends Phaser.Scene {
     this.testLabel=this.add.text(50,300,"", {fontSize:50}).setScrollFactor(0);
     
     this.ui = this.scene.launch("UI",{lapCount:this.map.lapCount});
+    
+    this.graphics=new Graphics3d();
     
   }
   

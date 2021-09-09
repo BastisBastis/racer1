@@ -9,8 +9,8 @@ const config = {
     parent: 'phaser-example',
     scale: {
       parent: 'phaser-example',
-      mode: Phaser.Scale.FIT,
-      autoCenter: Phaser.Scale.CENTER_BOTH,
+      mode: Phaser.Scale.NONE,
+      //autoCenter: Phaser.Scale.CENTER_BOTH,
       width: 800,
       height: 600
     },
@@ -21,7 +21,6 @@ const config = {
       }
   },
     scene: [
-      Test3d,
       Game,
       RaceOver,
       UI
