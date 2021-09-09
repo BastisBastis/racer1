@@ -1,5 +1,6 @@
 import * as THREE from "three"
-import Car3d from "../objects/Three/Car3d"
+//import Car3d from "../objects/Three/Car3d"
+import Test from "../objects/Three/Test"
 
 export default class Graphics3d {
   
@@ -36,7 +37,7 @@ export default class Graphics3d {
     
     
     const ground=getGround();
-    this.car=new Car3d();
+    this.car=new Test();
     
     this.scene.add(ground);
     this.scene.add(this.car);
