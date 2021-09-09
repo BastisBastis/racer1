@@ -1,11 +1,10 @@
 import * as THREE from "three"
-//import Car3d from "../objects/Three/Car3d"
-import Test from "../objects/Three/Test"
+import Car3d from "../objects/Three/Car3d"
+//import Test from "../objects/Three/Test"
 
 export default class Graphics3d {
   
   constructor() {
-    console.log("hepp")
     
     const canvas = document.querySelector('#c');
     this.renderer = new THREE.WebGLRenderer({canvas});
@@ -13,7 +12,7 @@ export default class Graphics3d {
     const fov = 75;
     const aspect = 2;  // the canvas default
     const near = 0.1;
-    const far = 1000;
+    const far = 10000;
     this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     this.camera.position.z = 150;
     this.camera.position.y=200;
@@ -25,7 +24,7 @@ export default class Graphics3d {
     this.scene.background = new THREE.Color( 0xdfeacf );
     
     const getGround=()=>{
-      const geometry = new THREE.PlaneGeometry( 400, 300 );
+      const geometry = new THREE.PlaneGeometry( 4000, 3000 );
       const material = new THREE.MeshBasicMaterial( {color: 0x777777, side: THREE.DoubleSide} );
       const plane = new THREE.Mesh( geometry, material );
       plane.rotation.x=90*Math.PI/180;
@@ -37,7 +36,7 @@ export default class Graphics3d {
     
     
     const ground=getGround();
-    this.car=new Test();
+    this.car=new Car3d();
     
     this.scene.add(ground);
     this.scene.add(this.car);
@@ -45,7 +44,7 @@ export default class Graphics3d {
   
   
    
-    requestAnimationFrame(this.render);
+    requestAnimationFrame(()=>this.render());
     
     
     const color = 0xFFFFFF;
@@ -57,16 +56,21 @@ export default class Graphics3d {
     const ambLight = new THREE.AmbientLight( 0x202020 ); // soft white light
     this.scene.add( ambLight );
     
-    alert()
   }
   
   render(time) {
-  //camera.lookAt(new THREE.Vector3( car.position.x,car.position.y,car.position.z ))
-  
+  this.camera.lookAt(new THREE.Vector3( this.car.position.x,this.car.position.y,this.car.position.z ))
+    //console.log(time);
  
-    this.renderer.render(scene, camera);
+    this.renderer.render(this.scene, this.camera);
    
-    requestAnimationFrame(this.render);
+    requestAnimationFrame(()=>this.render());
+  }
+
+  update(cars, player) {
+    //console.log(player.x);
+    this.car.position.x = player.x;
+    this.car.position.z = player.y;
   }
   
 }

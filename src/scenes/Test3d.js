@@ -20,24 +20,40 @@ export default class Test3d extends Phaser.Scene {
     
     
   const vertices = [
-          -1, 1, 
-            1, 1, 
-            -1, -1,
-            1, -1,
+          -1, 1, -1, //b l u
+            1, 1, -1, //b r u
+            -1, -1, -1, //b l d
+            1, -1, -1, //b r d
+            -1, 1, 1, //f l u
+            1, 1, 1, //f r u
+            -1, -1, 1, //f l d
+            1, -1, 1 //f r d
         ];
 
         const uvs = [
-            0, 0,
-            1, 0,
-            0, 1,
-            1, 1
+            0, 0, 0,
+            1, 0, 0,
+            0, 1, 1,
+            1, 1, 1,
+            0, 0, 0,
+            1, 0, 0,
+            0, 1, 1,
+            1, 1, 1,
+
         ];
 
-        const indicies = [ 0, 2, 1, 2, 3, 1 ];
+        const indicies = [ 
+            2, 0, 3, 0, 1, 3, 
+            4, 6, 5, 6, 7, 5, 
+            0, 4, 1, 4, 5, 1,
+            2, 3, 6, 3, 7, 6,
+            0, 2, 4, 2, 6, 4,
+            5, 7, 1, 7, 3, 1
+        ];
 
         const mesh = this.add.mesh(400, 300, 'car');
-
-        mesh.addVertices(vertices, uvs, indicies,true);
+        
+        mesh.addVertices(vertices, uvs, indicies,true, false, 0xff00ff);
 
         mesh.panZ(7);
 

@@ -174,6 +174,7 @@ export default class Game extends Phaser.Scene {
   }
 
   update(time,delta) {
+    this.graphics.update(null, {x:this.player.x, y:this.player.y});
     
     //if (this.input.activePointer.x>0) this.finished()()
     

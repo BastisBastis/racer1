@@ -171,7 +171,7 @@ geometry.setAttribute(
     0,    255,255,
   ])
   
-  geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3, true) );
+  geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3, true) );
     
   geometry.scale(10,10,10);
   
@@ -183,20 +183,20 @@ export default class Car3d extends THREE.Mesh {
   constructor() {
     
     
-    //const geometry = getGeometry();
+    const geometry = getGeometry();
     
-    const geometry = new THREE.PlaneGeometry( 400, 300 );
+    //const geometry = new THREE.PlaneGeometry( 400, 300 );
     
-    //const material = new THREE.MeshPhongMaterial( {vertexColors: THREE.VertexColors });
+    const material = new THREE.MeshPhongMaterial( {vertexColors: THREE.VertexColors });
     
-    const material = new THREE.MeshBasicMaterial( {color: 0x777777, side: THREE.DoubleSide} );
+    //const material = new THREE.MeshBasicMaterial( {color: 0x777777, side: THREE.DoubleSide} );
     
     
     super(geometry, material);
     console.log("hiop")
     //this.geometry = geometry;
     //this.material = material
-    //this.position.y=10;
+    this.position.y=10;
     
   }
   
