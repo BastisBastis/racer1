@@ -9,6 +9,8 @@ import Map from "../objects/Map"
 import Player from "../objects/Player";
 import EventsCenter from "../helpers/EventsCenter"
 
+const show3d = true;
+
 export default class Game extends Phaser.Scene {
   constructor () {
       super({key:"Game"});
@@ -27,7 +29,8 @@ export default class Game extends Phaser.Scene {
 
     
     //Camera Settings
-    //this.cameras.main.setBackgroundColor("#337733")
+    if (!show3d)
+      this.cameras.main.setBackgroundColor("#337733")
     
     //this.map = Map.defaultMap(this);
     this.map=Map.mapWithIndex(this,0);
@@ -58,8 +61,11 @@ export default class Game extends Phaser.Scene {
     
     this.controller= new Controller(this, this.player)
     
-    //this.cameras.main.startFollow(this.player);
-    let h=200;
+    if (!show3d) {
+      this.cameras.main.startFollow(this.player);
+      this.cameras.main.setZoom(1)
+    } else {
+      let h=200;
     const w=300;
     const zoom=Math.max(
       w/this.map.bounds.w,
@@ -70,6 +76,9 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.scrollX=this.map.bounds.x-156;
     this.cameras.main.scrollY=this.map.bounds.y-h/2;
     this.cameras.main.setViewport(0,0,300,h);
+    }
+    
+    
     
     
     this.startTime;
@@ -90,13 +99,15 @@ export default class Game extends Phaser.Scene {
     for (const opp of this.opponents) {
       oppData.push({id:opp.id,color:opp.tintTopLeft})
     }
-    this.graphics=new Graphics3d({
-      roadData:this.map.road.roadData,
-      player:{id:this.player.id,color:this.player.tintTopLeft},
-      opponents:oppData,
-      walls:this.map.walls
-      });
     
+    if (show3d) {
+      this.graphics=new Graphics3d({
+        roadData:this.map.road.roadData,
+        player:{id:this.player.id,color:this.player.tintTopLeft},
+        opponents:oppData,
+        walls:this.map.walls
+        });
+    }
   }
   
   printText(text){
@@ -197,21 +208,23 @@ export default class Game extends Phaser.Scene {
   update(time,delta) {
     
     //if (this.input.activePointer.x>0) this.finished()()
-    const oppData=[]
-    for (const opp of this.opponents) {
-      
-      oppData.push({
-        id:opp.id,
-        x:opp.x,
-        y:opp.y,
-        rot:opp.rotation
-      })
+    if (show3d) {
+      const oppData=[]
+      for (const opp of this.opponents) {
+        
+        oppData.push({
+          id:opp.id,
+          x:opp.x,
+          y:opp.y,
+          rot:opp.rotation
+        })
+      }
+      this.graphics.update(oppData,
+        {
+          x:this.player.x,
+          y:this.player.y,
+          rot:this.player.rotation})
     }
-    this.graphics.update(oppData,
-      {
-        x:this.player.x,
-        y:this.player.y,
-        rot:this.player.rotation})
     
     let raceOver=true;
     for (const car of [this.player, ...this.opponents]) {

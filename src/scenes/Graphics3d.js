@@ -35,7 +35,7 @@ export default class Graphics3d {
     
     for (const wallData of args.walls) {
       const wall = this.getWall(wallData);
-      console.log(wall)
+      //console.log(wall)
       this.scene.add(wall);
     }
     
@@ -91,6 +91,11 @@ export default class Graphics3d {
   }
   
   getWall(wallData) {
+    let minX =wallData.points[0];
+    let maxX = minX;
+    let minZ =wallData.points[1]
+    let maxZ =minZ;
+    
     const h=50;
     let lastX=wallData.points[0];
     let lastZ=wallData.points[1];
@@ -110,12 +115,18 @@ export default class Graphics3d {
     { pos: [lastX,  0,  lastZ], norm: [ 0,  1,  0], uv: [1, 1], },
       ])
       
-      
       lastX=newX;
       lastZ=newZ;
+      
+      minX = Math.min(minX,newX);
+      maxX = Math.max(maxX,newX);
+      minZ = Math.min(minZ,newZ);
+      maxZ = Math.max(maxZ,newZ);
+      
     }
     
-    
+    const bounds = {w:maxX-minX,h:maxZ-minZ};
+    console.log(bounds.w)
     
     const positions = [];
     const normals = [];
@@ -144,8 +155,8 @@ export default class Graphics3d {
     const material = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide} );
     
     const wall=new THREE.Mesh(geometry,material);
-    wall.position.x=wallData.x-405;
-    wall.position.z=wallData.y-780;
+    wall.position.x=wallData.x-bounds.w/2;
+    wall.position.z=wallData.y-bounds.h/2;
     
     return wall;
     
