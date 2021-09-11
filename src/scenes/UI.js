@@ -13,9 +13,9 @@ export default class UI extends Phaser.Scene {
     
     
     
-    this.elapsedTimeLabel=this.add.text(50,50,"0:00:00", {fontSize:50})
-    this.lapTimeLabel=this.add.text(50,100,"", {fontSize:50});
-    this.lapLabel=this.add.text(350,50,"Lap: 1/"+data.lapCount, {fontSize:50});
+    this.elapsedTimeLabel=this.add.text(350,70,"0:00:00", {fontSize:50})
+    this.lapTimeLabel=this.add.text(350,120,"", {fontSize:50});
+    this.lapLabel=this.add.text(350,10,"Lap: 1/"+data.lapCount, {fontSize:50});
     
     this.steeringOrigin = this.add.circle(this.cameras.main.width-100,100,30,0x000000,0.0);
     this.steeringPoint = this.add.circle(50,50,10,0x882222,0);

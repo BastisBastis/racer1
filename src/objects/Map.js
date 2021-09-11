@@ -5,16 +5,17 @@ import MapCollection from "../assets/maps.json"
 
 export default class Map {
   
-  constructor (scene, road, checkpoints, startPoints, bg) {
+  constructor (scene, road, checkpoints, startPoints, bounds,walls,bg) {
     this.scene =scene;
-    scene.cameras.main.setBackgroundColor(bg);
+    //scene.cameras.main.setBackgroundColor(bg);
     this.road = road;
     this.checkpoints=checkpoints;
     this.cars=[];
     this.lapCount=3;
     this.shouldStart=true;
     this.startPoints = startPoints
-    
+    this.bounds=bounds;
+    this.walls=walls;
     
   }
   
@@ -30,7 +31,9 @@ export default class Map {
       roadData.path,
       roadData.optimalPath,
       roadData.color,
-      bg
+      bg,
+      roadData.x3d,
+      roadData.y3d
     );
 
     
@@ -79,7 +82,7 @@ export default class Map {
    scene.add.polygon(finishLine.x, finishLine.y, finishLine.points, 0xffffff);
 
     
-    return new Map(scene,road,checkpointShapes, startPoints,bg);
+    return new Map(scene,road,checkpointShapes, startPoints,bounds,wallData,bg);
   }
   
   static defaultMap(scene) {
@@ -87,6 +90,8 @@ export default class Map {
     const roadData = {
       x:150,
       y:200,
+      x3d:20,
+      y3d:30,
       width:100,
       dir:0,
       color:0x888888,

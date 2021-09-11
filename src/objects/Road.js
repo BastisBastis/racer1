@@ -104,7 +104,7 @@ class RoadPoints {
 
 export default class Road extends Phaser.GameObjects.Polygon {
   
-  constructor (scene,x,y,outerPoints,innerPoints,navPoints,optimalPath, fill,bg,cars,obstacles) {
+  constructor (scene,x,y,outerPoints,innerPoints,navPoints,optimalPath, fill,bg,roadData) {
     
     
     super(scene,x,y,outerPoints,fill);
@@ -113,12 +113,13 @@ export default class Road extends Phaser.GameObjects.Polygon {
     this.setOrigin(0,0);
     this.navPoints=navPoints;
     this.optimalPath=optimalPath;
+    this.roadData=roadData;
     
     this.island = scene.add.polygon(x, y, innerPoints, bg).setOrigin(0,0);
     
     
     //this.drawNavPoints()
-    this.drawOptimalPath();
+    //this.drawOptimalPath();
     
 
   }
@@ -144,12 +145,12 @@ export default class Road extends Phaser.GameObjects.Polygon {
       return 1;
     }
     
-    /*
+    
   for (const i in this.navPoints[0])  {
       const p = this.navPoints[findPathAtPoint(i)][i];
       this.scene.add.circle(p.x,p.y,5,0xffffff);
     }
-    */
+    
   }
   
   contains(x,y) {
@@ -158,7 +159,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
 
   
   
-  static roadFromData(scene,x,y,width,dir,data,optimalPath,roadColor,bg) {
+  static roadFromData(scene,x,y,width,dir,data,optimalPath,roadColor,bg,x3d,y3d) {
     const roadPoints = new RoadPoints(x, y, width, dir);
 
     for (let entry of data) {
@@ -174,7 +175,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
           
       }
     }
-    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadPoints.navPoints, optimalPath,0x888888, 0x337733)
+    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadPoints.navPoints, optimalPath,0x888888, 0x337733,{x:x,y:y,width:width,dir:dir,data:data,roadColor:roadColor,x3d:x3d,y3d:y3d});
   }
   
   static defaultRoad(scene) {

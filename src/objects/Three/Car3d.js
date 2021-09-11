@@ -1,85 +1,123 @@
 import * as THREE from "three"
 
-const getGeometry =()=> {
+const getGeometry =(rgb)=> {
     
     
   const vertices = [
-    // windshield
-    { pos: [-1,  0,  2], norm: [ 0,  0,  1], uv: [0, 0], },
-    { pos: [ 1, 0,  2], norm: [ 0,  0,  1], uv: [1, 0], },
-    { pos: [-1,  1,  1], norm: [ 0,  0,  1], uv: [0, 1], },
-   
-    { pos: [-1,  1,  1], norm: [ 0,  0,  1], uv: [0, 1], },
-    { pos: [ 1,  0,  2], norm: [ 0,  0,  1], uv: [1, 0], },
-    { pos: [ 1,  1,  1], norm: [ 0,  0,  1], uv: [1, 1], },
-    
-    //hood
-    
-    { pos: [-1, -1,  2], norm: [ 0,  0,  1], uv: [0, 0], },
-    { pos: [ 1, -1,  2], norm: [ 0,  0,  1], uv: [1, 0], },
-    { pos: [-1,  0,  2], norm: [ 0,  0,  1], uv: [0, 1], },
-   
-    { pos: [-1,  0,  2], norm: [ 0,  0,  1], uv: [0, 1], },
-    { pos: [ 1, -1,  2], norm: [ 0,  0,  1], uv: [1, 0], },
-    { pos: [ 1,  0,  2], norm: [ 0,  0,  1], uv: [1, 1], },
-    
-    // right
-    { pos: [ 1, -1,  1], norm: [ 1,  0,  0], uv: [0, 0], },
-    { pos: [ 1, -1, -1], norm: [ 1,  0,  0], uv: [1, 0], },
-    { pos: [ 1,  1,  1], norm: [ 1,  0,  0], uv: [0, 1], },
-   
-    { pos: [ 1,  1,  1], norm: [ 1,  0,  0], uv: [0, 1], },
-    { pos: [ 1, -1, -1], norm: [ 1,  0,  0], uv: [1, 0], },
-    { pos: [ 1,  1, -1], norm: [ 1,  0,  0], uv: [1, 1], },
-    //right door
-    { pos: [ 1, -1,  2], norm: [ 1,  0,  0], uv: [0, 0], },
-    { pos: [ 1, -1,  1], norm: [ 1,  0,  0], uv: [1, 0], },
-    { pos: [ 1,  0,  2], norm: [ 1,  0,  0], uv: [0, 1], },
-   
-    { pos: [ 1,  0,  2], norm: [ 1,  0,  0], uv: [0, 1], },
-    { pos: [ 1, -1,  1], norm: [ 1,  0,  0], uv: [1, 0], },
-    { pos: [ 1,  1,  1], norm: [ 1,  0,  0], uv: [1, 1], },
-    // back
-    { pos: [ 1, -1, -1], norm: [ 0,  0, -1], uv: [0, 0], },
-    { pos: [-1, -1, -1], norm: [ 0,  0, -1], uv: [1, 0], },
-    { pos: [ 1,  1, -1], norm: [ 0,  0, -1], uv: [0, 1], },
-   
-    { pos: [ 1,  1, -1], norm: [ 0,  0, -1], uv: [0, 1], },
-    { pos: [-1, -1, -1], norm: [ 0,  0, -1], uv: [1, 0], },
-    { pos: [-1,  1, -1], norm: [ 0,  0, -1], uv: [1, 1], },
-    // left
-    { pos: [-1, -1, -1], norm: [-1,  0,  0], uv: [0, 0], },
-    { pos: [-1, -1,  1], norm: [-1,  0,  0], uv: [1, 0], },
-    { pos: [-1,  1, -1], norm: [-1,  0,  0], uv: [0, 1], },
-   
-    { pos: [-1,  1, -1], norm: [-1,  0,  0], uv: [0, 1], },
-    { pos: [-1, -1,  1], norm: [-1,  0,  0], uv: [1, 0], },
-    { pos: [-1,  1,  1], norm: [-1,  0,  0], uv: [1, 1], },
-    // left door
-    { pos: [-1, -1,  1], norm: [-1,  0,  0], uv: [0, 0], },
-    { pos: [-1, -1,  2], norm: [-1,  0,  0], uv: [1, 0], },
-    { pos: [-1,  1,  1], norm: [-1,  0,  0], uv: [0, 1], },
-   
-    { pos: [-1,  1,  1], norm: [-1,  0,  0], uv: [0, 1], },
-    { pos: [-1, -1,  2], norm: [-1,  0,  0], uv: [1, 0], },
-    { pos: [-1,  0,  2], norm: [-1,  0,  0], uv: [1, 1], },
-    // top
-    { pos: [ 1,  1, -1], norm: [ 0,  1,  0], uv: [0, 0], },
-    { pos: [-1,  1, -1], norm: [ 0,  1,  0], uv: [1, 0], },
-    { pos: [ 1,  1,  1], norm: [ 0,  1,  0], uv: [0, 1], },
-   
-    { pos: [ 1,  1,  1], norm: [ 0,  1,  0], uv: [0, 1], },
-    { pos: [-1,  1, -1], norm: [ 0,  1,  0], uv: [1, 0], },
-    { pos: [-1,  1,  1], norm: [ 0,  1,  0], uv: [1, 1], },
-    // bottom
-    { pos: [ 1, -1,  2], norm: [ 0, -1,  0], uv: [0, 0], },
-    { pos: [-1, -1,  2], norm: [ 0, -1,  0], uv: [1, 0], },
-    { pos: [ 1, -1, -1], norm: [ 0, -1,  0], uv: [0, 1], },
-   
-    { pos: [ 1, -1, -1], norm: [ 0, -1,  0], uv: [0, 1], },
-    { pos: [-1, -1,  2], norm: [ 0, -1,  0], uv: [1, 0], },
-    { pos: [-1, -1, -1], norm: [ 0, -1,  0], uv: [1, 1], },
-  ];
+  // windshield
+  { pos: [-1,  0,  2], norm: [ 0,  0,  1], uv: [0, 0], },
+  { pos: [ 1, 0,  2], norm: [ 0,  0,  1], uv: [1, 0], },
+  { pos: [-1,  1,  1], norm: [ 0,  0,  1], uv: [0, 1], },
+ 
+  { pos: [-1,  1,  1], norm: [ 0,  0,  1], uv: [0, 1], },
+  { pos: [ 1,  0,  2], norm: [ 0,  0,  1], uv: [1, 0], },
+  { pos: [ 1,  1,  1], norm: [ 0,  0,  1], uv: [1, 1], },
+  
+  //hood
+  
+  { pos: [-1, -0.5,  3], norm: [ 0,  0,  1], uv: [0, 0], },
+  { pos: [ 1, -0.5,  3], norm: [ 0,  0,  1], uv: [1, 0], },
+  { pos: [-1,  0,  2], norm: [ 0,  0,  1], uv: [0, 1], },
+ 
+  { pos: [-1,  0,  2], norm: [ 0,  0,  1], uv: [0, 1], },
+  { pos: [ 1, -0.5,  3], norm: [ 0,  0,  1], uv: [1, 0], },
+  { pos: [ 1,  0,  2], norm: [ 0,  0,  1], uv: [1, 1], },
+  
+  //front
+  { pos: [-1, -1,  3], norm: [ 0,  0,  1], uv: [0, 0], },
+  { pos: [ 1, -1,  3], norm: [ 0,  0,  1], uv: [1, 0], },
+  { pos: [-1,  -0.5,  3], norm: [ 0,  0,  1], uv: [0, 1], },
+ 
+  { pos: [-1,  -0.5,  3], norm: [ 0,  0,  1], uv: [0, 1], },
+  { pos: [ 1, -1,  3], norm: [ 0,  0,  1], uv: [1, 0], },
+  { pos: [ 1,  -0.5,  3], norm: [ 0,  0,  1], uv: [1, 1], },
+  // right
+  { pos: [ 1, -1,  1], norm: [ 1,  0,  0], uv: [0, 0], },
+  { pos: [ 1, -1, -2], norm: [ 1,  0,  0], uv: [1, 0], },
+  { pos: [ 1,  1,  1], norm: [ 1,  0,  0], uv: [0, 1], },
+ 
+  { pos: [ 1,  1,  1], norm: [ 1,  0,  0], uv: [0, 1], },
+  { pos: [ 1, -1, -2], norm: [ 1,  0,  0], uv: [1, 0], },
+  { pos: [ 1,  1, -1], norm: [ 1,  0,  0], uv: [1, 1], },
+  
+  { pos: [ 1,  1,  -1], norm: [ 1,  0,  0], uv: [0, 1], },
+  { pos: [ 1, -1, -2], norm: [ 1,  0,  0], uv: [1, 0], },
+  { pos: [ 1,  0.3, -2], norm: [ 1,  0,  0], uv: [1, 1], },
+  //right door
+  { pos: [ 1, -1,  3], norm: [ 1,  0,  0], uv: [0, 0], },
+  { pos: [ 1, -1,  1], norm: [ 1,  0,  0], uv: [1, 0], },
+  { pos: [ 1,  0,  2], norm: [ 1,  0,  0], uv: [0, 1], },
+ 
+  { pos: [ 1,  0,  2], norm: [ 1,  0,  0], uv: [0, 1], },
+  { pos: [ 1, -1,  1], norm: [ 1,  0,  0], uv: [1, 0], },
+  { pos: [ 1,  1,  1], norm: [ 1,  0,  0], uv: [1, 1], },
+  
+  { pos: [ 1,  -1,  3], norm: [ 1,  0,  0], uv: [0, 1], },
+  { pos: [ 1, 0,  2], norm: [ 1,  0,  0], uv: [1, 0], },
+  { pos: [ 1,  -0.5,  3], norm: [ 1,  0,  0], uv: [1, 1], },
+  
+  
+  // back
+  { pos: [ 1, -1, -2], norm: [ 0,  0, -1], uv: [0, 0], },
+  { pos: [-1, -1, -2], norm: [ 0,  0, -1], uv: [1, 0], },
+  { pos: [ 1,  0.3, -2], norm: [ 0,  0, -1], uv: [0, 1], },
+ 
+  { pos: [ 1,  0.3, -2], norm: [ 0,  0, -1], uv: [0, 1], },
+  { pos: [-1, -1, -2], norm: [ 0,  0, -1], uv: [1, 0], },
+  { pos: [-1,  0.3, -2], norm: [ 0,  0, -1], uv: [1, 1], },
+  
+  // rear window
+  { pos: [ 1,  0.3, -2], norm: [ 0,  0, -1], uv: [0, 0], },
+  { pos: [-1,  0.3, -2], norm: [ 0,  0, -1], uv: [1, 0], },
+  { pos: [ 1,  1, -1], norm: [ 0,  0, -1], uv: [0, 1], },
+ 
+  { pos: [ 1,  1, -1], norm: [ 0,  0, -1], uv: [0, 1], },
+  { pos: [-1,  0.3, -2], norm: [ 0,  0, -1], uv: [1, 0], },
+  { pos: [-1,  1, -1], norm: [ 0,  0, -1], uv: [1, 1], },
+  
+  // left
+  { pos: [-1, -1, -2], norm: [-1,  0,  0], uv: [0, 0], },
+  { pos: [-1, -1,  1], norm: [-1,  0,  0], uv: [1, 0], },
+  { pos: [-1,  1, -1], norm: [-1,  0,  0], uv: [0, 1], },
+ 
+  { pos: [-1,  1, -1], norm: [-1,  0,  0], uv: [0, 1], },
+  { pos: [-1, -1,  1], norm: [-1,  0,  0], uv: [1, 0], },
+  { pos: [-1,  1,  1], norm: [-1,  0,  0], uv: [1, 1], },
+  
+  { pos: [-1, -1, -2], norm: [-1,  0,  0], uv: [0, 1], },
+  { pos: [-1,  1, -1], norm: [-1,  0,  0], uv: [1, 0], },
+  { pos: [-1,  0.3, -2], norm: [-1,  0,  0], uv: [1, 1], },
+  
+  // left door
+  { pos: [-1, -1,  1], norm: [-1,  0,  0], uv: [0, 0], },
+  { pos: [-1, -1,  3], norm: [-1,  0,  0], uv: [1, 0], },
+  { pos: [-1,  1,  1], norm: [-1,  0,  0], uv: [0, 1], },
+ 
+  { pos: [-1,  1,  1], norm: [-1,  0,  0], uv: [0, 1], },
+  { pos: [-1, -1,  2], norm: [-1,  0,  0], uv: [1, 0], },
+  { pos: [-1,  0,  2], norm: [-1,  0,  0], uv: [1, 1], },
+  
+  { pos: [-1,  0,  2], norm: [-1,  0,  0], uv: [0, 1], },
+  { pos: [-1, -1,  3], norm: [-1,  0,  0], uv: [1, 0], },
+  { pos: [-1,  -0.5,  3], norm: [-1,  0,  0], uv: [1, 1], },
+  
+  // top
+  { pos: [ 1,  1, -1], norm: [ 0,  1,  0], uv: [0, 0], },
+  { pos: [-1,  1, -1], norm: [ 0,  1,  0], uv: [1, 0], },
+  { pos: [ 1,  1,  1], norm: [ 0,  1,  0], uv: [0, 1], },
+ 
+  { pos: [ 1,  1,  1], norm: [ 0,  1,  0], uv: [0, 1], },
+  { pos: [-1,  1, -1], norm: [ 0,  1,  0], uv: [1, 0], },
+  { pos: [-1,  1,  1], norm: [ 0,  1,  0], uv: [1, 1], },
+  // bottom
+  { pos: [ 1, -1,  2], norm: [ 0, -1,  0], uv: [0, 0], },
+  { pos: [-1, -1,  2], norm: [ 0, -1,  0], uv: [1, 0], },
+  { pos: [ 1, -1, -1], norm: [ 0, -1,  0], uv: [0, 1], },
+ 
+  { pos: [ 1, -1, -1], norm: [ 0, -1,  0], uv: [0, 1], },
+  { pos: [-1, -1,  2], norm: [ 0, -1,  0], uv: [1, 0], },
+  { pos: [-1, -1, -1], norm: [ 0, -1,  0], uv: [1, 1], },
+];
   
   
   
@@ -114,89 +152,122 @@ geometry.setAttribute(
     0, 0, 0,
     0, 0, 0,
     
-    255,  0,  0,  //hood
-    255,  0,  0,
-    255,  0,  0,  
-    255,  0,  0,
-    255,  0,  0,  
-    255,  0,  0,
+    rgb[0], rgb[1], rgb[2],  //hood
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
     
-    0,    255,0,  //right
-    0,    255,0,
-    0,    255,0,  
-    0,    255,0,
-    0,    255,0,  
-    0,    255,0,
+    rgb[0], rgb[1], rgb[2], //front
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
     
-    0,    150,0,  //right door
-    0,    150,0,
-    0,    150,0,  
-    0,    150,0,
-    0,    150,0,  
-    0,    150,0,
+    rgb[0], rgb[1], rgb[2],  //right
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
     
-    0,    0,  255, //back
-    0,    0,  255,
-    0,    0,  255,
-    0,    0,  255,
-    0,    0,  255,
-    0,    0,  255,
+    rgb[0], rgb[1], rgb[2],  //right door
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
     
-    255,  255,0,  //left
-    255,  255,0,
-    255,  255,0,  
-    255,  255,0,
-    255,  255,0,  
-    255,  255,0,
+    rgb[0], rgb[1], rgb[2], //back
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
     
-    255,  255,100,  //left door
-    255,  255,100,
-    255,  255,100,  
-    255,  255,100,
-    255,  255,100,  
-    255,  255,100,
+    0, 0, 0, //rear window
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
     
-    255,  0,  255,
-    255,  0,  255,
-    255,  0,  255,
-    255,  0,  255,
-    255,  0,  255,
-    255,  0,  255,
+    rgb[0], rgb[1], rgb[2],  //left
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
     
-    0,    255,255,
-    0,    255,255,
-    0,    255,255,
-    0,    255,255,
-    0,    255,255,
-    0,    255,255,
+    rgb[0], rgb[1], rgb[2],  //left door
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
+    rgb[0], rgb[1], rgb[2],  
+    rgb[0], rgb[1], rgb[2],
   ])
   
   geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3, true) );
     
-  geometry.scale(10,10,10);
+  geometry.scale(7,5,6);
   
   return geometry;
 }
 
 export default class Car3d extends THREE.Mesh {
   
-  constructor() {
+  constructor(args) {
+    let hexColor=args.color.toString(16);
+    while (hexColor.length<6) {
+      hexColor = "00"+hexColor;
+    }
+    //hexColor="ff0000"
+    const aRgbHex = hexColor.match(/.{1,2}/g);
+    const rgb = [
+        parseInt(aRgbHex[0], 16),
+        parseInt(aRgbHex[1], 16),
+        parseInt(aRgbHex[2], 16)
+    ];
     
     
-    const geometry = getGeometry();
+    const geometry = getGeometry(rgb);
     
-    //const geometry = new THREE.PlaneGeometry( 400, 300 );
     
     const material = new THREE.MeshPhongMaterial( {vertexColors: THREE.VertexColors });
     
-    //const material = new THREE.MeshBasicMaterial( {color: 0x777777, side: THREE.DoubleSide} );
-    
+
     
     super(geometry, material);
-    console.log("hiop")
-    //this.geometry = geometry;
-    //this.material = material
-    this.position.y=10;
+    
+    this.position.y=6;
     
   }
   

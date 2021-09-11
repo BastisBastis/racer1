@@ -27,10 +27,10 @@ export default class Game extends Phaser.Scene {
 
     
     //Camera Settings
-    this.cameras.main.setBackgroundColor("#337733")
+    //this.cameras.main.setBackgroundColor("#337733")
     
-    this.map = Map.defaultMap(this);
-    //this.map=Map.mapWithIndex(this,1);
+    //this.map = Map.defaultMap(this);
+    this.map=Map.mapWithIndex(this,0);
     
     this.road = this.map.road;
     
@@ -39,6 +39,7 @@ export default class Game extends Phaser.Scene {
     if (demo) {
       this.player.shouldAutoDrive=true;
     }
+    
     this.map.addCar(this.player);
     this.opponents = [];
     const opponentColors=[0xffff00, 0x00ff00, 0x0000ff,0xff00ff,0x00ffff];
@@ -57,9 +58,19 @@ export default class Game extends Phaser.Scene {
     
     this.controller= new Controller(this, this.player)
     
-    this.cameras.main.startFollow(this.player);
-    this.cameras.main.setZoom(1)
-    //this.cameras.main.scrollY=400;
+    //this.cameras.main.startFollow(this.player);
+    let h=200;
+    const w=300;
+    const zoom=Math.max(
+      w/this.map.bounds.w,
+      0
+    )
+    this.cameras.main.setZoom(zoom)
+    h=this.map.bounds.h*zoom;
+    this.cameras.main.scrollX=this.map.bounds.x-156;
+    this.cameras.main.scrollY=this.map.bounds.y-h/2;
+    this.cameras.main.setViewport(0,0,300,h);
+    
     
     this.startTime;
     this.lapStartTime;
@@ -74,7 +85,17 @@ export default class Game extends Phaser.Scene {
     
     this.ui = this.scene.launch("UI",{lapCount:this.map.lapCount});
     
-    this.graphics=new Graphics3d();
+    
+    const oppData=[];
+    for (const opp of this.opponents) {
+      oppData.push({id:opp.id,color:opp.tintTopLeft})
+    }
+    this.graphics=new Graphics3d({
+      roadData:this.map.road.roadData,
+      player:{id:this.player.id,color:this.player.tintTopLeft},
+      opponents:oppData,
+      walls:this.map.walls
+      });
     
   }
   
@@ -174,9 +195,23 @@ export default class Game extends Phaser.Scene {
   }
 
   update(time,delta) {
-    this.graphics.update(null, {x:this.player.x, y:this.player.y});
     
     //if (this.input.activePointer.x>0) this.finished()()
+    const oppData=[]
+    for (const opp of this.opponents) {
+      
+      oppData.push({
+        id:opp.id,
+        x:opp.x,
+        y:opp.y,
+        rot:opp.rotation
+      })
+    }
+    this.graphics.update(oppData,
+      {
+        x:this.player.x,
+        y:this.player.y,
+        rot:this.player.rotation})
     
     let raceOver=true;
     for (const car of [this.player, ...this.opponents]) {
