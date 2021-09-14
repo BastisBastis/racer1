@@ -77,6 +77,10 @@ export default class Car extends Phaser.Physics.Matter.Sprite {
     return Math.sqrt(v.x*v.x+v.y*v.y);
   }
   
+  getMovementDirection() {
+    return Math.atan2(this.body.velocity.x,this.body.velocity.y)
+  }
+  
   addOpponent(opponent) {
     
     this.opponents.push(opponent);

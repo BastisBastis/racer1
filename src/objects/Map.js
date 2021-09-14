@@ -5,7 +5,7 @@ import MapCollection from "../assets/maps.json"
 
 export default class Map {
   
-  constructor (scene, road, checkpoints, startPoints, bounds,walls,bg) {
+  constructor (scene, road, checkpoints, startPoints, bounds,walls,finishLine,bg) {
     this.scene =scene;
     //scene.cameras.main.setBackgroundColor(bg);
     this.road = road;
@@ -16,6 +16,7 @@ export default class Map {
     this.startPoints = startPoints
     this.bounds=bounds;
     this.walls=walls;
+    this.finishLine=finishLine;
     
   }
   
@@ -52,7 +53,7 @@ export default class Map {
     const borderWidth=10;
     const borderPoints = `${0} ${0} ${0+bounds.w} ${0} ${0+bounds.w} ${0+bounds.h} ${0} ${0+bounds.h} ${0} ${0+borderWidth} ${0+borderWidth} ${0+borderWidth} ${0+borderWidth} ${0+bounds.h - borderWidth} ${0+bounds.w-borderWidth} ${0+bounds.h-borderWidth} ${0+bounds.w-borderWidth} ${0+borderWidth} ${0} ${0+borderWidth}`;
     
-    const borderShape = scene.add.polygon(bounds.x, bounds.y, borderPoints, 0x000000);
+    const borderShape = scene.add.polygon(bounds.x, bounds.y, borderPoints, 0x000000,0);
     scene.matter.add.gameObject(borderShape, { shape: { type: 'fromVerts', verts: borderPoints, flagInternal: true }, isStatic: true });
    
    const checkpointShapes = [];
@@ -82,7 +83,7 @@ export default class Map {
    scene.add.polygon(finishLine.x, finishLine.y, finishLine.points, 0xffffff);
 
     
-    return new Map(scene,road,checkpointShapes, startPoints,bounds,wallData,bg);
+    return new Map(scene,road,checkpointShapes, startPoints,bounds,wallData,finishLine,bg);
   }
   
   static defaultMap(scene) {

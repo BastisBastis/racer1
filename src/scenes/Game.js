@@ -9,7 +9,7 @@ import Map from "../objects/Map"
 import Player from "../objects/Player";
 import EventsCenter from "../helpers/EventsCenter"
 
-const show3d = true;
+//const show3d = true;
 
 export default class Game extends Phaser.Scene {
   constructor () {
@@ -20,9 +20,11 @@ export default class Game extends Phaser.Scene {
       this.load.image('car', carImg);
   }
     
-  create () {
-    
-    const demo=false;
+  create (data) {
+    this.demo = data.demo;
+  const show3d= data.show3d==undefined ? true: data.show3d;
+    console.log(show3d)
+    //const demo=true;
 
     //World stuff
     this.matter.world.disableGravity();
@@ -33,13 +35,14 @@ export default class Game extends Phaser.Scene {
       this.cameras.main.setBackgroundColor("#337733")
     
     //this.map = Map.defaultMap(this);
-    this.map=Map.mapWithIndex(this,0);
+    const mapIndex = data.mapIndex ||0;
+    this.map=Map.mapWithIndex(this,mapIndex);
     
     this.road = this.map.road;
     
     
     this.player = new Player(this, 0xff0000, 100,230,0,"Red");
-    if (demo) {
+    if (this.demo) {
       this.player.shouldAutoDrive=true;
     }
     
@@ -58,12 +61,24 @@ export default class Game extends Phaser.Scene {
       this.opponents.push(car);
     }
     
+    if (!this.demo) {
+      this.controller= new Controller(this, this.player)
+    }
     
-    this.controller= new Controller(this, this.player)
-    
-    if (!show3d) {
+    if (!show3d && !this.demo) {
       this.cameras.main.startFollow(this.player);
       this.cameras.main.setZoom(1)
+    } else if (!show3d && this.demo) {
+      
+      const hRatio = this.cameras.main.height/this.map.bounds.h;
+      const wRatio = this.cameras.main.width/this.map.bounds.w;
+      const zoom = Math.min(hRatio,wRatio);
+      this.cameras.main.setZoom(zoom)
+      const h=this.map.bounds.h*zoom;
+      const w = this.map.bounds.w*zoom;
+      this.cameras.main.scrollX=this.map.bounds.x-w/2;
+      this.cameras.main.scrollY=this.map.bounds.y-h/2;
+      
     } else {
       let h=200;
     const w=300;
@@ -88,26 +103,67 @@ export default class Game extends Phaser.Scene {
 
     this.countdown=5;
 
-    this.proceedCountdown();
+    if (this.demo) {
+      this.startRace()
+    } else {
+      this.proceedCountdown();
+    }
+    
     
     this.testLabel=this.add.text(50,300,"", {fontSize:50}).setScrollFactor(0);
     
-    this.ui = this.scene.launch("UI",{lapCount:this.map.lapCount});
+    if (!this.demo) {
+      this.ui = this.scene.launch("UI",{lapCount:this.map.lapCount});
+      }
     
     
-    const oppData=[];
-    for (const opp of this.opponents) {
-      oppData.push({id:opp.id,color:opp.tintTopLeft})
-    }
+    
     
     if (show3d) {
+      this.start3d();
+    }
+  }
+  
+  start3d() {
+    const scaleBox = scale => {
+      let box = document.getElementById('c')
+      if (box) {
+        box.style.top = this.game.canvas.offsetTop+"px";
+        box.style.left=this.game.canvas.offsetLeft+"px";
+        box.style.height=this.scale.displaySize.height+"px";
+        box.style.width=this.scale.displaySize.width+"px";
+        /*
+        box.style.transform = `scale(${scale})`
+        box.style.transformOrigin = 'top left'
+        box.style.top = this.game.canvas.offsetTop;
+        //box.style.top = `${this.game.canvas.offsetTop + this.scale.displaySize.height / 2 - (250 / 2) * scale}px`
+        //box.style.left = `${this.game.canvas.offsetLeft + this.scale.displaySize.width / 2 - (300 / 2) * scale}px`
+        box.style.left=0;
+        */
+      }
+    }
+
+    // initial scale
+    let scale = this.game.scale.displaySize.width / this.game.scale.gameSize.width
+    scaleBox(scale)
+
+    // on resize listener
+    this.scale.on('resize', (gameSize, baseSize, displaySize, resolution) => {
+      let scale = displaySize.width / gameSize.width
+      scaleBox(scale)
+    })
+    
+    const oppData=[];
+      for (const opp of this.opponents) {
+        oppData.push({id:opp.id,color:opp.tintTopLeft})
+      }
       this.graphics=new Graphics3d({
         roadData:this.map.road.roadData,
         player:{id:this.player.id,color:this.player.tintTopLeft},
         opponents:oppData,
-        walls:this.map.walls
+        walls:this.map.walls,
+        finishLine:this.map.finishLine
         });
-    }
   }
   
   printText(text){
@@ -175,24 +231,26 @@ export default class Game extends Phaser.Scene {
   }
 
   finished() {
-    if (this.raceActive){
-      
-      const sortedCars=[this.player, ...this.opponents].sort((a,b)=>{
+    if (!this.demo) {
+      if (this.raceActive){
         
-        return a.finishTime-b.finishTime;
-      });
-      const results=[];
-      for (const car of sortedCars) {
-        results.push({
-          name:car.name,
-          lapTimes:car.lapTimes,
-          finishTime:car.finishTime
-          });
+        const sortedCars=[this.player, ...this.opponents].sort((a,b)=>{
+          
+          return a.finishTime-b.finishTime;
+        });
+        const results=[];
+        for (const car of sortedCars) {
+          results.push({
+            name:car.name,
+            lapTimes:car.lapTimes,
+            finishTime:car.finishTime
+            });
+        }
+        
+        setTimeout(()=>{this.showRaceOver(results) },1500);
       }
-      
-      setTimeout(()=>{this.showRaceOver(results) },1500);
+      this.raceActive = false;
     }
-    this.raceActive = false;
   }
   
   showRaceOver(results) {
@@ -207,8 +265,9 @@ export default class Game extends Phaser.Scene {
 
   update(time,delta) {
     
+    
     //if (this.input.activePointer.x>0) this.finished()()
-    if (show3d) {
+    if (this.graphics) {
       const oppData=[]
       for (const opp of this.opponents) {
         
@@ -223,7 +282,10 @@ export default class Game extends Phaser.Scene {
         {
           x:this.player.x,
           y:this.player.y,
-          rot:this.player.rotation})
+          rot:this.player.rotation,
+          dir:this.player.getMovementDirection()
+          })
+          
     }
     
     let raceOver=true;
@@ -237,7 +299,7 @@ export default class Game extends Phaser.Scene {
     }
     
     if (this.raceStarted) {
-      if (!this.player.finished) {
+      if (this.controller && !this.player.finished) {
         this.controller.update(delta)
       }
       this.player.update(time, delta);

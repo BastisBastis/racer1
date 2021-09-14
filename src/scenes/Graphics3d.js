@@ -14,6 +14,12 @@ export default class Graphics3d {
     //console.log(args.roadData)
     
     const canvas = document.querySelector('#c');
+    const phaserCanvas=document.querySelector('#phaserContainer');
+    
+    //canvas.style.top=phaserCanvas.style.top;
+    //console.log(phaserCanvas.getBoundingClientRect().top )
+    
+    
     this.renderer = new THREE.WebGLRenderer({canvas});
   
     const fov = 75;
@@ -22,7 +28,7 @@ export default class Graphics3d {
     const far = 10000;
     this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     this.camera.position.z = 350;
-    this.camera.position.y=20;
+    this.camera.position.y=50;
     this.camera.position.x=350
     
     this.camera.lookAt(new THREE.Vector3( 50, 0, 50 ))
@@ -38,7 +44,7 @@ export default class Graphics3d {
       //console.log(wall)
       this.scene.add(wall);
     }
-    
+    const finishLine=this.getFinishLine(args.finishLine);
     
     const ground=this.getGround();
     this.player=new Car3d({color:args.player.color});
@@ -50,6 +56,7 @@ export default class Graphics3d {
       this.scene.add(car);
     }
     
+    this.scene.add(finishLine)
     this.scene.add(road)
     this.scene.add(ground);
     this.scene.add(this.player);
@@ -63,19 +70,24 @@ export default class Graphics3d {
     const color = 0xFFFFFF;
     const intensity = 1;
     const dirLight = new THREE.DirectionalLight(color, intensity);
-    dirLight.position.set(-1, 2, 4);
+    dirLight.position.set(-1, 1, 4);
     this.scene.add(dirLight);
     
-    const ambLight = new THREE.AmbientLight( 0x202020 ); // soft white light
+    const ambLight = new THREE.AmbientLight( 0x606060 ); // soft white light
     this.scene.add( ambLight );
     
   }
   
   render(time) {
     
+    const canvas = this.renderer.domElement;
+  this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  this.camera.updateProjectionMatrix();
+    
+    
     const camDist = 50;
     const camX= this.player.position.x+ camDist*Math.cos(Math.PI-this.player.rotation.y + 90*Math.PI/180);
-    const camY= this.player.position.z+ camDist*Math.sin(Math.PI-this.player.rotation.y + 90*Math.PI/180);
+    const camY= this.player.position.z+ camDist*Math.sin(Math.PI-this.player.rotation.y + 90*Math.PI/180); 
     
     this.camera.position.z = camY;
     this.camera.position.x = camX;
@@ -90,19 +102,86 @@ export default class Graphics3d {
     requestAnimationFrame(()=>this.render());
   }
   
+  getFinishLine(lineData) {
+    const size=5;
+    const y = 2;
+    const vertices=[];
+    
+    const maxX = Math.max(lineData.points[0],lineData.points[2],lineData.points[4],lineData.points[6])
+    const minX = Math.min(lineData.points[0],lineData.points[2],lineData.points[4],lineData.points[6])
+   const maxZ = Math.max(lineData.points[1],lineData.points[3],lineData.points[5],lineData.points[7])
+   const minZ = Math.min(lineData.points[1],lineData.points[3],lineData.points[5],lineData.points[7])
+   
+   const ldp=lineData.points;
+   vertices.push(...[
+      { pos: [ ldp[4],  y, ldp[5]], norm: [ 0,  1,  0], uv: [0, 0], },
+  { pos: [ldp[2],  y, ldp[3]], norm: [ 0,  1,  0], uv: [1, 0], },
+  { pos: [ ldp[6],  y,  ldp[7]], norm: [ 0,  1,  0], uv: [0, 1], },
+ 
+  { pos: [ldp[6],  y,  ldp[7]], norm: [ 0,  1,  0], uv: [0, 1], },
+  { pos: [ldp[2],  y, ldp[3]], norm: [ 0,  1,  0], uv: [1, 0], },
+  { pos: [ldp[0],  y, ldp[1]], norm: [ 0,  1,  0], uv: [1, 1], },
+    ])
+   
+    
+    
+    const positions = [];
+    const normals = [];
+    const uvs = [];
+    for (const vertex of vertices) {
+      
+      positions.push(...vertex.pos);
+      normals.push(...vertex.norm);
+      uvs.push(...vertex.uv);
+    }
+      
+    const geometry = new THREE.BufferGeometry();
+    const positionNumComponents = 3;
+    const normalNumComponents = 3;
+    const uvNumComponents = 2;
+    geometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
+  geometry.setAttribute(
+      'normal',
+      new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
+    geometry.setAttribute(
+        'uv',
+        new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
+        
+    
+    
+    
+    let loader = new THREE.TextureLoader();
+let tex  = loader.load ("https://i.imgur.com/p8CRm9W.jpg");
+tex.repeat.set (0.5,5);
+tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    
+    
+        
+    
+    const material = new THREE.MeshBasicMaterial( {map:tex, /*color: 0xffffff,*/ side: THREE.DoubleSide} );
+    
+    const line=new THREE.Mesh(geometry,material);
+    line.position.x=lineData.x-(maxX-minX)/2;
+    line.position.z=lineData.y-(maxZ-minZ)/2;
+    
+    return line; 
+  }
+  
   getWall(wallData) {
     let minX =wallData.points[0];
     let maxX = minX;
     let minZ =wallData.points[1]
     let maxZ =minZ;
     
-    const h=50;
-    let lastX=wallData.points[0];
-    let lastZ=wallData.points[1];
+    const h=20;
+    let lastX=wallData.points.slice(-2)[0];
+    let lastZ=wallData.points.slice(-1)[0];
     
     const vertices=[];
     
-    for (let i =2; i<wallData.points.length;i+=2) {
+    for (let i =0; i<wallData.points.length;i+=2) {
       const newX=wallData.points[i];
       const newZ=wallData.points[i+1];
       vertices.push(...[
@@ -124,6 +203,19 @@ export default class Graphics3d {
       maxZ = Math.max(maxZ,newZ);
       
     }
+   
+   if (wallData.points.length==8) {
+     const wdp=wallData.points;
+     vertices.push(...[
+        { pos: [ wdp[4],  h, wdp[5]], norm: [ 0,  1,  0], uv: [0, 0], },
+    { pos: [wdp[2],  h, wdp[3]], norm: [ 0,  1,  0], uv: [1, 0], },
+    { pos: [ wdp[6],  h,  wdp[7]], norm: [ 0,  1,  0], uv: [0, 1], },
+   
+    { pos: [wdp[6],  h,  wdp[7]], norm: [ 0,  1,  0], uv: [0, 1], },
+    { pos: [wdp[2],  h, wdp[3]], norm: [ 0,  1,  0], uv: [1, 0], },
+    { pos: [wdp[0],  h, wdp[1]], norm: [ 0,  1,  0], uv: [1, 1], },
+      ])
+   }
     
     const bounds = {w:maxX-minX,h:maxZ-minZ};
     console.log(bounds.w)
@@ -152,7 +244,7 @@ export default class Graphics3d {
         'uv',
         new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
     
-    const material = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide} );
+    const material = new THREE.MeshPhongMaterial( {color: wallData.color, side: THREE.DoubleSide} );
     
     const wall=new THREE.Mesh(geometry,material);
     wall.position.x=wallData.x-bounds.w/2;
@@ -322,6 +414,14 @@ export default class Graphics3d {
     this.player.position.x = player.x;
     this.player.position.z = player.y;
     this.player.rotation.y = Math.PI-(player.rot+90*Math.PI/180);
+    
+    /*
+    const camDist = 50;
+    const camX= this.player.position.x+ camDist*Math.cos(Math.PI-player.dir + 90*Math.PI/180);
+    const camY= this.player.position.z+ camDist*Math.sin(Math.PI-player.dir + 90*Math.PI/180);
+    this.camera.position.z = camY;
+    this.camera.position.x = camX;
+    */
     
     for (const oppData of opponents) {
       const opp = this.opponents[oppData.id];

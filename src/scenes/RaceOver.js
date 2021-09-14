@@ -43,6 +43,7 @@ export default class RaceOver extends Phaser.Scene {
     }
   }
   
+  
   update() {
     if (this.input.activePointer.x<100 && this.input.activePointer.x>0) {
       

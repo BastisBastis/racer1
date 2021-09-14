@@ -22,7 +22,7 @@ export default class Controller {
     const maxJoystick = 100;
     //Register new touches
     scene.input.on("pointerdown", pointer => {
-      if (!this.steeringTouch && pointer.x>cam.w/2) {
+      if (!this.steeringTouch && pointer.x>0) {
         
         this.steeringTouch = {
           id:pointer.id,
