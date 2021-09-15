@@ -32,9 +32,7 @@ export default class Map {
       roadData.path,
       roadData.optimalPath,
       roadData.color,
-      bg,
-      roadData.x3d,
-      roadData.y3d
+      bg
     );
 
     
@@ -42,7 +40,7 @@ export default class Map {
     for (const wd of wallData) {
       
       const shape = scene.add.polygon(wd.x,wd.y,wd.points,wd.color);
-      
+      //alert(wd.x)
       let pointString = "";
       for (const p of wd.points) {
         pointString+= p+" ";
@@ -245,16 +243,95 @@ export default class Map {
     const walls = [
       {points: [
         0,0,
-        8,-8,
+        20,0,
         260,140,
-        260,260,
-        250,260,
-        250,150
+        240,140,
       ],
       color:0x883300,
-      x:495,
+      x:440,
+      y:210
+      },
+      {points: [
+        0,0,
+        20,0,
+        20,120,
+        0,120,
+      ],
+      color:0x883300,
+      x:560,
+      y:340
+      },
+      {points: [
+        10,0,
+        0,20,
+        110,70,
+        110,50,
+      ],
+      color:0x883300,
+      x:600,
+      y:70
+      },
+      {points: [
+        0,0,
+        0,20,
+        150,370,
+        150,350,
+      ],
+      color:0x883300,
+      x:729,
       y:270
       },
+      {points: [
+        0,0,
+        0,20,
+        260,20,
+        260,0,
+      ],
+      color:0x883300,
+      x:860,
+      y:440
+      },
+      {points: [
+        360,0,
+        360,20,
+        0,300,
+        0,280,
+      ],
+      color:0x883300,
+      x:550,
+      y:580
+      },
+      {points: [
+        0,0,
+        20,0,
+        20,600,
+        0,600,
+      ],
+      color:0x883300,
+      x:360,
+      y:630
+      },
+      {points: [
+        400,0,
+        400,20,
+        0,20,
+        0,0,
+      ],
+      color:0x883300,
+      x:160,
+      y:340
+      },
+      {points: [
+        130,0,
+        130,20,
+        0,160,
+        0,140,
+      ],
+      color:0x883300,
+      x:-105,
+      y:410
+      },
+      /*
       {points: [
         0,0,
         5,-8,
@@ -292,7 +369,7 @@ export default class Map {
       color:0x883300,
       x:135,
       y:350
-      },
+      },*/
     ]
     
     const bounds = {x:200,y:350,w:2000,h:1500};
@@ -367,6 +444,7 @@ export default class Map {
       startPoints:startPoints,
       bg:0x337733
     };
+    //prompt("ddf",JSON.stringify(mapData))
     
     return Map.mapFromData(scene,roadData,walls,bounds,checkpoints, finishLine, startPoints,0x337733)
   }

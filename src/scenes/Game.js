@@ -23,8 +23,13 @@ export default class Game extends Phaser.Scene {
   create (data) {
     this.demo = data.demo;
   const show3d= data.show3d==undefined ? true: data.show3d;
-    console.log(show3d)
+    
     //const demo=true;
+
+    //this.demo=true;
+    
+    
+
 
     //World stuff
     this.matter.world.disableGravity();
@@ -122,6 +127,8 @@ export default class Game extends Phaser.Scene {
     if (show3d) {
       this.start3d();
     }
+    
+    //this.customZoom();
   }
   
   start3d() {
@@ -132,14 +139,7 @@ export default class Game extends Phaser.Scene {
         box.style.left=this.game.canvas.offsetLeft+"px";
         box.style.height=this.scale.displaySize.height+"px";
         box.style.width=this.scale.displaySize.width+"px";
-        /*
-        box.style.transform = `scale(${scale})`
-        box.style.transformOrigin = 'top left'
-        box.style.top = this.game.canvas.offsetTop;
-        //box.style.top = `${this.game.canvas.offsetTop + this.scale.displaySize.height / 2 - (250 / 2) * scale}px`
-        //box.style.left = `${this.game.canvas.offsetLeft + this.scale.displaySize.width / 2 - (300 / 2) * scale}px`
-        box.style.left=0;
-        */
+        
       }
     }
 
@@ -162,8 +162,11 @@ export default class Game extends Phaser.Scene {
         player:{id:this.player.id,color:this.player.tintTopLeft},
         opponents:oppData,
         walls:this.map.walls,
-        finishLine:this.map.finishLine
+        finishLine:this.map.finishLine,
+        bounds:this.map.bounds
         });
+        
+    
   }
   
   printText(text){
@@ -261,6 +264,12 @@ export default class Game extends Phaser.Scene {
   setLapLabel(lap, total) {
     //this.lapLabel.text = "Lap: "+lap+"/"+total;
     EventsCenter.emit("setLapLabel","Lap: "+lap+"/"+total);
+  }
+  
+  customZoom() {
+    this.cameras.main.setZoom(0.6)
+    this.cameras.main.scrollX=-300
+    this.cameras.main.scrollY=200
   }
 
   update(time,delta) {

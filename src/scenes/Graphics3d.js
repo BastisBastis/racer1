@@ -44,6 +44,12 @@ export default class Graphics3d {
       //console.log(wall)
       this.scene.add(wall);
     }
+    
+    const boundsWalls=this.getBounds(args.bounds);
+    for (const wall of boundsWalls) {
+        this.scene.add(wall);
+    }
+    
     const finishLine=this.getFinishLine(args.finishLine);
     
     const ground=this.getGround();
@@ -167,6 +173,62 @@ tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
     line.position.z=lineData.y-(maxZ-minZ)/2;
     
     return line; 
+  }
+  
+  getBounds(boundsData) {
+    const w=20;
+    ;
+    const wallData=[
+      {
+      x:boundsData.x,
+      y:boundsData.y-boundsData.h/2,
+      color:0x883300,
+      points:[
+        0,0,
+        boundsData.w+w,0,
+        boundsData.w+w,w,
+        0,w
+        ]
+      },
+      {
+      x:boundsData.x+boundsData.w/2,
+      y:boundsData.y,
+      color:0x883300,
+      points:[
+        0,0,
+        w,0,
+        w,boundsData.h,
+        0,boundsData.h
+        ]
+      },
+      {
+      x:boundsData.x,
+      y:boundsData.y+boundsData.h/2,
+      color:0x883300,
+      points:[
+        0,0,
+        boundsData.w+w,0,
+        boundsData.w+w,w,
+        0,w
+        ]
+      },
+      {
+      x:boundsData.x-boundsData.w/2,
+      y:boundsData.y,
+      color:0x883300,
+      points:[
+        0,0,
+        w,0,
+        w,boundsData.h,
+        0,boundsData.h
+        ]
+      },
+    ];
+    const walls=[];
+    for (const wall of wallData) {
+      walls.push(this.getWall(wall))
+    }
+    return walls;
   }
   
   getWall(wallData) {

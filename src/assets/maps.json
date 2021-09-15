@@ -155,7 +155,7 @@
   ],
   "bounds": {
     "x": 300,
-    "y": 300,
+    "y": 280,
     "w": 800,
     "h": 600
   },
@@ -219,7 +219,7 @@
   "bg": 3372851
 },
 {
-  "title": "\"Kanintesvängavänster\"-banan",
+  "title": "\"Våga vägra vänster\"-banan",
   "roadData": {
     "x": 150,
     "y": 200,
@@ -282,9 +282,9 @@
   ],
   "bounds": {
     "x": 200,
-    "y": 550,
-    "w": 1600,
-    "h": 1300
+    "y": 570,
+    "w": 1300,
+    "h": 1000
   },
   "checkpoints": [
     {
@@ -349,5 +349,14 @@
     }
   ],
   "bg": 3372851
-}
+},
+{"title":"\"Hit å dit\"-banan","roadData":{"x":150,"y":200,"x3d":20,"y3d":30,"width":100,"dir":0,"color":8947848,"path":[{"type":0,"dist":200},{"type":1,"dir":"r","stepDist":10,"steps":9,"stepAngle":10},{"type":1,"dir":"l","stepDist":10,"steps":18,"stepAngle":10},{"type":0,"dist":70},{"type":1,"dir":"l","stepDist":10,"steps":10,"stepAngle":9},{"type":1,"dir":"r","stepDist":10,"steps":23,"stepAngle":9},{"type":1,"dir":"r","stepDist":10,"steps":14,"stepAngle":3},{"type":0,"dist":200},{"type":1,"dir":"l","stepDist":10,"steps":8,"stepAngle":10},{"type":1,"dir":"r","stepDist":10,"steps":40,"stepAngle":6},{"type":1,"dir":"l","stepDist":10,"steps":9,"stepAngle":10},{"type":0,"dist":200},{"type":1,"dir":"l","stepDist":10,"steps":9,"stepAngle":10},{"type":1,"dir":"r","stepDist":10,"steps":14,"stepAngle":10},{"type":1,"dir":"l","stepDist":10,"steps":4,"stepAngle":10},{"type":1,"dir":"r","stepDist":10,"steps":16,"stepAngle":10},{"type":1,"dir":"l","stepDist":10,"steps":8,"stepAngle":10},{"type":0,"dist":200},{"type":1,"dir":"l","stepDist":10,"steps":9,"stepAngle":10},{"type":1,"dir":"r","stepDist":10,"steps":25,"stepAngle":7},{"type":0,"dist":150},{"type":1,"dir":"r","stepDist":10,"steps":5,"stepAngle":9.2},{"type":0,"dist":220}],"optimalPath":[{"point":28,"path":2},{"point":70,"path":1},{"point":100,"path":2},{"point":135,"path":1},{"point":160,"path":2},{"point":200,"path":0},{"point":210,"path":1},{"point":240,"path":2},{"point":275,"path":0},{"point":5000,"path":2}]},"walls":[{"points":[0,0,20,0,260,140,240,140],"color":8925952,"x":440,"y":210},{"points":[0,0,20,0,20,120,0,120],"color":8925952,"x":560,"y":340},{"points":[10,0,0,20,110,70,110,50],"color":8925952,"x":600,"y":70},{"points":[0,0,0,20,150,370,150,350],"color":8925952,"x":729,"y":270},{"points":[0,0,0,20,260,20,260,0],"color":8925952,"x":860,"y":440},{"points":[360,0,360,20,0,300,0,280],"color":8925952,"x":550,"y":580},{"points":[0,0,20,0,20,600,0,600],"color":8925952,"x":360,"y":630},{"points":[400,0,400,20,0,20,0,0],"color":8925952,"x":160,"y":340},{"points":[130,0,130,20,0,160,0,140],"color":8925952,"x":-105,"y":410}],
+"bounds": {
+  "x":400,
+  "y":500,
+  "w":1800,
+  "h":1300
+  },
+"checkpoints":[{"centerX":695,"centerY":180,"angle":70},{"centerX":550,"centerY":590,"angle":120},{"centerX":360,"centerY":800,"angle":180},{"centerX":330,"centerY":350,"length":200,"angle":0}],"finishLine":{"x":330,"y":250,"points":[0,0,0,100,10,100,10,0]},"startPoints":[{"x":300,"y":230},{"x":300,"y":270},{"x":230,"y":230},{"x":230,"y":270},{"x":160,"y":230},{"x":160,"y":270}],"bg":3372851}
+
 ]

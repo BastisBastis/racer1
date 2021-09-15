@@ -159,7 +159,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
 
   
   
-  static roadFromData(scene,x,y,width,dir,data,optimalPath,roadColor,bg,x3d,y3d) {
+  static roadFromData(scene,x,y,width,dir,data,optimalPath,roadColor,bg) {
     const roadPoints = new RoadPoints(x, y, width, dir);
 
     for (let entry of data) {
@@ -175,7 +175,7 @@ export default class Road extends Phaser.GameObjects.Polygon {
           
       }
     }
-    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadPoints.navPoints, optimalPath,0x888888, 0x337733,{x:x,y:y,width:width,dir:dir,data:data,roadColor:roadColor,x3d:x3d,y3d:y3d});
+    return new Road(scene,0,0, roadPoints.outer, roadPoints.inner, roadPoints.navPoints, optimalPath,0x888888, 0x337733,{x:x,y:y,width:width,dir:dir,data:data,roadColor:roadColor});
   }
   
   static defaultRoad(scene) {
